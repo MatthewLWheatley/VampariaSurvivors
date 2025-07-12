@@ -9,11 +9,11 @@ using Terraria.ModLoader;
 
 namespace VampariaSurvivors.Content.Items
 {
-    internal class VamparieChest : ModItem
+    internal class VampariaChest : ModItem
     {
         public override void SetDefaults()
         {
-            Item.SetNameOverride("Vamparie Chest");
+            Item.SetNameOverride("Vamparia Chest");
             Item.width = 32;
             Item.height = 32;
             Item.maxStack = 99;

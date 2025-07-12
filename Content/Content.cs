@@ -11,7 +11,7 @@ namespace VampariaSurvivors.Content
         {
             if (npc.type == NPCID.EyeofCthulhu)
             {
-                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.VamparieChest>(), 2));
+                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.VampariaChest>(), 2));
             }
         }
     }
