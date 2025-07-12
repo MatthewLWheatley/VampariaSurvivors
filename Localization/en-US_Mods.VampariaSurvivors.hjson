@@ -1,0 +1,58 @@
+# This file will automatically update with entries for new content after a build and reload.
+
+Items: {
+	Garlic: {
+		DisplayName: Garlic
+		Tooltip:
+			'''
+			Template of an item
+			Replacing this tooltip is duty 
+			It's snowing on Mt.Fuji
+			'''
+	}
+
+	GarlicLvl1: {
+		DisplayName: Garlic Lvl1
+		Tooltip: ""
+	}
+
+	GarlicLvl2: {
+		DisplayName: Garlic Lvl2
+		Tooltip: ""
+	}
+
+	GarlicLvl3: {
+		DisplayName: Garlic Lvl3
+		Tooltip: ""
+	}
+
+	GarlicLvl4: {
+		DisplayName: Garlic Lvl4
+		Tooltip: ""
+	}
+
+	GarlicLvl5: {
+		DisplayName: Garlic Lvl5
+		Tooltip: ""
+	}
+
+	GarlicLvl6: {
+		DisplayName: Garlic Lvl6
+		Tooltip: ""
+	}
+
+	GarlicLvl7: {
+		DisplayName: Garlic Lvl7
+		Tooltip: ""
+	}
+
+	GarlicLvl8: {
+		DisplayName: Garlic Lvl8
+		Tooltip: ""
+	}
+}
+
+Projectiles: {
+	GarlicAuraProjectile.DisplayName: Garlic Aura Projectile
+	GarlicAuraProjectileLvl1.DisplayName: Garlic Aura Projectile Lvl1
+}
