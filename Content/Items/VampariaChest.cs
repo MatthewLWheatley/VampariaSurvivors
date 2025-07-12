@@ -9,7 +9,7 @@ using Terraria.ModLoader;
 
 namespace VampariaSurvivors.Content.Items
 {
-    internal class VampariaChest : ModItem
+    public  class VampariaChest : ModItem
     {
         public override void SetDefaults()
         {

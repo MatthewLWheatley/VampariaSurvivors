@@ -50,6 +50,11 @@ Items: {
 		DisplayName: Garlic Lvl8
 		Tooltip: ""
 	}
+
+	VampariaChest: {
+		DisplayName: Vamparia Chest
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
