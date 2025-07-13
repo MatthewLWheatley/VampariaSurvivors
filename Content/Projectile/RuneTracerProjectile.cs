@@ -9,6 +9,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.DataStructures;
+using Terraria.Audio;
 
 namespace VampariaSurvivors.Content.Projectile
 {
@@ -247,7 +248,7 @@ namespace VampariaSurvivors.Content.Projectile
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
             
-            Main.NewText("fuck X " + Projectile.position.X + " you " + (Main.screenPosition.X + Main.offScreenRange) + "cunt" + Main.player[Projectile.owner].position.X);
+            SoundEngine.PlaySound(SoundID.Tink, Projectile.position);
 
             // IM KEEPING THIS HERE AS A REMINDER OF HOW IM A FUCKING IDIOT
             // bounceVelocity = oldVelocity;

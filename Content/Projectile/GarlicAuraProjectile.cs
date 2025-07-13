@@ -1,10 +1,11 @@
-using Terraria;
-using Terraria.ID;
-using Terraria.ModLoader;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
+using Terraria;
+using Terraria.Audio;
 using Terraria.DataStructures;
+using Terraria.ID;
+using Terraria.ModLoader;
 
 namespace VampariaSurvivors.Content.Projectile
 {
@@ -129,6 +130,14 @@ namespace VampariaSurvivors.Content.Projectile
                     }
                 }
             }
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+
+            SoundEngine.PlaySound(SoundID.Splash, Projectile.position);
+
+            return true;
         }
 
         public override bool PreDraw(ref Color lightColor)

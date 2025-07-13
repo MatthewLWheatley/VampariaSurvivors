@@ -6,9 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Terraria;
+using Terraria.Audio;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
-using Terraria.DataStructures;
 
 namespace VampariaSurvivors.Content.Projectile
 {
@@ -244,6 +245,14 @@ namespace VampariaSurvivors.Content.Projectile
             {
                 Projectile.Kill();
             }
+        }
+
+        public override bool OnTileCollide(Vector2 oldVelocity)
+        {
+            
+            SoundEngine.PlaySound(SoundID.DD2_BetsyFireballImpact, Projectile.position);
+
+            return true;
         }
 
         // fucking ew, but it works
