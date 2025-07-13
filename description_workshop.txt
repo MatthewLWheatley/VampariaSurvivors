@@ -1,1 +1,29 @@
-This description will show up on the steam page, check out https://steamcommunity.com/comment/Guide/formattinghelp.
+[h1]Vamparia Survivors Arsenal[/h1]
+Brings the addictive chaos of Vampire Survivors to Terraria! This mod adds iconic weapons from the hit indie game, letting you unleash automatic projectile mayhem on Terraria's monsters.
+
+Just Kill Bosses to start collect items through the chests dropped
+
+[h2]Features:[/h2]
+
+[*]Multiple Vampire Survivors weapons with authentic mechanics
+[*]Automatic firing patterns that scale with your character
+[*]Faithful recreations of the original weapon behaviors
+[*]Compatible with Terraria's progression system
+
+Transform your Terraria experience with the satisfying weapon systems that made Vampire Survivors a phenomenon. Perfect for players who want that "one more minute" gameplay loop in their favorite sandbox world.
+
+[i]Built For the 2025 TModLoader Jam[/i]
+
+[url=github.com/MatthewLWheatley/VampariaSurvivors]GitHub Link[/url]
+
+[h2]Weapons Added:[/h2]
+
+[*]Magic Wand
+[*]Fire Wand
+[*]Garlic
+[*]RuneTracer
+
+[h2]To Add:[/h2]
+
+[*][i][u][b]THE REST OF THE WEAPONS[/b][/u][/i]
+[*]A Dungeon Defenders style mini game based around the Vampire Survivors game loop

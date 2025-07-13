@@ -1,1 +1,12 @@
-Modify this file with a description of your mod.
+Vamparia Survivors Arsenal
+Brings the addictive chaos of Vampire Survivors to Terraria! This mod adds iconic weapons from the hit indie game, letting you unleash automatic projectile mayhem on Terraria's monsters.
+Features:
+
+Multiple Vampire Survivors weapons with authentic mechanics
+Automatic firing patterns that scale with your character
+Faithful recreations of the original weapon behaviors
+Compatible with Terraria's progression system
+
+Transform your Terraria experience with the satisfying weapon systems that made Vampire Survivors a phenomenon. Perfect for players who want that "one more minute" gameplay loop in their favorite sandbox world.
+
+Built For the 2025 TModLoader Jam
