@@ -95,6 +95,46 @@ Items: {
 		DisplayName: Magic Wand Lvl8
 		Tooltip: ""
 	}
+
+	FireWandLvl1: {
+		DisplayName: Fire Wand Lvl1
+		Tooltip: ""
+	}
+
+	FireWandLvl2: {
+		DisplayName: Fire Wand Lvl2
+		Tooltip: ""
+	}
+
+	FireWandLvl3: {
+		DisplayName: Fire Wand Lvl3
+		Tooltip: ""
+	}
+
+	FireWandLvl4: {
+		DisplayName: Fire Wand Lvl4
+		Tooltip: ""
+	}
+
+	FireWandLvl5: {
+		DisplayName: Fire Wand Lvl5
+		Tooltip: ""
+	}
+
+	FireWandLvl6: {
+		DisplayName: Fire Wand Lvl6
+		Tooltip: ""
+	}
+
+	FireWandLvl7: {
+		DisplayName: Fire Wand Lvl7
+		Tooltip: ""
+	}
+
+	FireWandLvl8: {
+		DisplayName: Fire Wand Lvl8
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -102,4 +142,6 @@ Projectiles: {
 	GarlicAuraProjectileLvl1.DisplayName: Garlic Aura Projectile Lvl1
 	MagicWandControllerProjectile.DisplayName: Magic Wand Controller Projectile
 	MagicWandProjectile.DisplayName: Magic Wand Projectile
+	FireWandControllerProjectile.DisplayName: Fire Wand Controller Projectile
+	FireWandProjectile.DisplayName: Fire Wand Projectile
 }
