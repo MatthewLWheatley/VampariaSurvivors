@@ -168,7 +168,7 @@ namespace VampariaSurvivors.Content.Projectile
     {
         private int penetrationsLeft;
         private List<Vector2> trailPositions = new List<Vector2>();
-        private int maxTrailLength = 6;
+        private int maxTrailLength = 12;
         private float homingStrength = 0.00f;
 
         public override void SetDefaults()
@@ -264,7 +264,7 @@ namespace VampariaSurvivors.Content.Projectile
                     float trailAlpha = (float)(maxTrailLength - i) / maxTrailLength;
                     trailAlpha *= 0.6f;
 
-                    float trailScale = trailAlpha * 0.8f;
+                    float trailScale = trailAlpha * .8f;
 
                     Color trailColor = Color.OrangeRed * trailAlpha * (1f - Projectile.alpha / 255f);
 
@@ -293,7 +293,7 @@ namespace VampariaSurvivors.Content.Projectile
                 mainTexture,
                 mainDrawPosition,
                 null,
-                Color.LightBlue * (1f - Projectile.alpha / 255f),
+                Color.OrangeRed * (1f - Projectile.alpha / 255f),
                 Projectile.rotation - MathHelper.ToRadians(45f),
                 mainOrigin,
                 1f,
