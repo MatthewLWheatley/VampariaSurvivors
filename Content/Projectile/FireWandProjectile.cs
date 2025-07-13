@@ -219,25 +219,19 @@ namespace VampariaSurvivors.Content.Projectile
             NPC closest = null;
             float closestDistance = maxRange;
             Vector2 currentDirection = Vector2.Normalize(Projectile.velocity);
-
+            List<NPC> potentialTargets = new List<NPC>();
             for (int i = 0; i < Main.maxNPCs; i++)
             {
                 NPC npc = Main.npc[i];
                 if (npc.active && !npc.friendly && !npc.dontTakeDamage && npc.lifeMax > 5)
                 {
-                    float distance = Vector2.Distance(npc.Center, position);
-                    if (distance < closestDistance)
-                    {
-                        Vector2 directionToEnemy = Vector2.Normalize(npc.Center - position);
-                        float dotProduct = Vector2.Dot(currentDirection, directionToEnemy);
-
-                        if (dotProduct > 0.9f)
-                        {
-                            closest = npc;
-                            closestDistance = distance;
-                        }
-                    }
+                    potentialTargets.Add(npc);
                 }
+            }
+
+            if (potentialTargets.Count > 0)
+            {
+                closest = potentialTargets[Main.rand.Next(potentialTargets.Count)];
             }
 
             return closest;

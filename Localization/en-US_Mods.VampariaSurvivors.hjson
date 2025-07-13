@@ -135,6 +135,46 @@ Items: {
 		DisplayName: Fire Wand Lvl8
 		Tooltip: ""
 	}
+
+	RuneTracerLvl1: {
+		DisplayName: Rune Tracer Lvl1
+		Tooltip: ""
+	}
+
+	RuneTracerLvl2: {
+		DisplayName: Rune Tracer Lvl2
+		Tooltip: ""
+	}
+
+	RuneTracerLvl3: {
+		DisplayName: Rune Tracer Lvl3
+		Tooltip: ""
+	}
+
+	RuneTracerLvl4: {
+		DisplayName: Rune Tracer Lvl4
+		Tooltip: ""
+	}
+
+	RuneTracerLvl5: {
+		DisplayName: Rune Tracer Lvl5
+		Tooltip: ""
+	}
+
+	RuneTracerLvl6: {
+		DisplayName: Rune Tracer Lvl6
+		Tooltip: ""
+	}
+
+	RuneTracerLvl7: {
+		DisplayName: Rune Tracer Lvl7
+		Tooltip: ""
+	}
+
+	RuneTracerLvl8: {
+		DisplayName: Rune Tracer Lvl8
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -144,4 +184,6 @@ Projectiles: {
 	MagicWandProjectile.DisplayName: Magic Wand Projectile
 	FireWandControllerProjectile.DisplayName: Fire Wand Controller Projectile
 	FireWandProjectile.DisplayName: Fire Wand Projectile
+	RuneTracerControllerProjectile.DisplayName: Rune Tracer Controller Projectile
+	RuneTracerProjectile.DisplayName: Rune Tracer Projectile
 }
