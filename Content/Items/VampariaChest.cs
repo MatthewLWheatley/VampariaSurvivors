@@ -30,8 +30,9 @@ namespace VampariaSurvivors.Content.Items
         {
             var lootPool = new List<(int itemType, int weight)>
             {
-                (ModContent.ItemType<GarlicLvl1>(), 100), 
-                //add other weapons 
+                (ModContent.ItemType<GarlicLvl1>(), 100),
+                (ModContent.ItemType<MagicWandLvl1>(), 80),                
+                //add other weapons
             };
 
             int totalWeight = 0;

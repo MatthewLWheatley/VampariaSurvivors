@@ -9,9 +9,9 @@ namespace VampariaSurvivors.Content
     {
         public override void ModifyNPCLoot(NPC npc, NPCLoot npcLoot)
         {
-            if (npc.type == NPCID.EyeofCthulhu)
+            if (npc.boss || NPCID.Sets.ShouldBeCountedAsBoss[npc.type])
             {
-                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.VampariaChest>(), 2));
+                npcLoot.Add(ItemDropRule.Common(ModContent.ItemType<Items.VampariaChest>(), 1));
             }
         }
     }

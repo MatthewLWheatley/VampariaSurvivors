@@ -55,9 +55,51 @@ Items: {
 		DisplayName: Vamparia Chest
 		Tooltip: ""
 	}
+
+	MagicWandLvl1: {
+		DisplayName: Magic Wand Lvl1
+		Tooltip: ""
+	}
+
+	MagicWandLvl2: {
+		DisplayName: Magic Wand Lvl2
+		Tooltip: ""
+	}
+
+	MagicWandLvl3: {
+		DisplayName: Magic Wand Lvl3
+		Tooltip: ""
+	}
+
+	MagicWandLvl4: {
+		DisplayName: Magic Wand Lvl4
+		Tooltip: ""
+	}
+
+	MagicWandLvl5: {
+		DisplayName: Magic Wand Lvl5
+		Tooltip: ""
+	}
+
+	MagicWandLvl6: {
+		DisplayName: Magic Wand Lvl6
+		Tooltip: ""
+	}
+
+	MagicWandLvl7: {
+		DisplayName: Magic Wand Lvl7
+		Tooltip: ""
+	}
+
+	MagicWandLvl8: {
+		DisplayName: Magic Wand Lvl8
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
 	GarlicAuraProjectile.DisplayName: Garlic Aura Projectile
 	GarlicAuraProjectileLvl1.DisplayName: Garlic Aura Projectile Lvl1
+	MagicWandControllerProjectile.DisplayName: Magic Wand Controller Projectile
+	MagicWandProjectile.DisplayName: Magic Wand Projectile
 }
