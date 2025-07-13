@@ -148,7 +148,8 @@ namespace VampariaSurvivors.Content.Projectile
                 projectileType,
                 damage,
                 2f,
-                player.whoAmI
+                player.whoAmI,
+                ai0: projectilePenetration
             );
 
         }
@@ -170,6 +171,7 @@ namespace VampariaSurvivors.Content.Projectile
             Projectile.ignoreWater = true;
             Projectile.tileCollide = true;
             Projectile.light = 0.5f;
+            Projectile.penetrate = 100;
         }
 
         public override void OnSpawn(IEntitySource source)
@@ -219,7 +221,7 @@ namespace VampariaSurvivors.Content.Projectile
                         Vector2 directionToEnemy = Vector2.Normalize(npc.Center - position);
                         float dotProduct = Vector2.Dot(currentDirection, directionToEnemy);
                         
-                        if (dotProduct > 0.6f)
+                        if (dotProduct > 0.9f)
                         {
                             closest = npc;
                             closestDistance = distance;
