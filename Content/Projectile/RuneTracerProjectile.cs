@@ -209,15 +209,8 @@ namespace VampariaSurvivors.Content.Projectile
                 verticalOffset = (actualScreenHeight - maxHeight) / 2;
             }
             if(verticalOffset < horizontalOffset)verticalOffset = (int)(horizontalOffset / Main.graphics.GraphicsDevice.Viewport.AspectRatio);
-            if(verticalOffset > horizontalOffset)horizontalOffset = (int)(verticalOffset * Main.graphics.GraphicsDevice.Viewport.AspectRatio);
+            if(verticalOffset > horizontalOffset)horizontalOffset = (int)(verticalOffset / Main.graphics.GraphicsDevice.Viewport.AspectRatio);
             Projectile.rotation += 0.01f;
-
-            Main.NewText("x " + Main.MouseScreen.X + " y " + Main.MouseScreen.Y);
-            Main.NewText("a x " + horizontalOffset + " y " + verticalOffset);
-            Main.NewText("b x " + Main.graphics.GraphicsDevice.Viewport.Width + " y " + Main.screenHeight);
-            Main.NewText("c x " + Main.graphics.GraphicsDevice.Viewport.Height + " y " + Main.screenPosition.Y);
-            Main.NewText("c x " + " y " + Main.graphics.GraphicsDevice.Viewport.AspectRatio);
-            Main.graphics.GraphicsDevice.Viewport.Bounds.TopLeft().ToString();
 
             if (Projectile.position.X <= Main.screenPosition.X + horizontalOffset + (Projectile.height * 2))
             {
