@@ -22,6 +22,7 @@ Transform your Terraria experience with the satisfying weapon systems that made 
 [*]Fire Wand
 [*]Garlic
 [*]RuneTracer
+[*]Bone
 
 [h2]To Add:[/h2]
 
