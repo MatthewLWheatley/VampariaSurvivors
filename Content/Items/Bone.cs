@@ -89,6 +89,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 2;
         }
+
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<boneLvl1>(), 2)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class boneLvl3 : boneLvl1
     {
@@ -96,6 +104,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 3;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<boneLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<boneLvl2>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
     public class boneLvl4 : boneLvl1
@@ -105,6 +121,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 4;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<boneLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<boneLvl3>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class boneLvl5 : boneLvl1
     {
@@ -112,6 +136,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 5;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<boneLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<boneLvl4>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
     public class boneLvl6 : boneLvl1
@@ -121,6 +153,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 6;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<boneLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<boneLvl5>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class boneLvl7 : boneLvl1
     {
@@ -129,6 +169,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 7;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<boneLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<boneLvl6>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class boneLvl8 : boneLvl1
     {
@@ -136,6 +184,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 8;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<boneLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<boneLvl7>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
 }

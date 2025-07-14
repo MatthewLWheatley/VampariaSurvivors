@@ -91,6 +91,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 2;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class RuneTracerLvl3 : RuneTracerLvl1
     {
@@ -98,6 +106,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 3;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl2>(), 1)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
     public class RuneTracerLvl4 : RuneTracerLvl1
@@ -107,6 +123,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 4;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl3>(), 1)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class RuneTracerLvl5 : RuneTracerLvl1
     {
@@ -114,6 +138,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 5;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl4>(), 1)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
     public class RuneTracerLvl6 : RuneTracerLvl1
@@ -123,6 +155,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 6;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl5>(), 1)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class RuneTracerLvl7 : RuneTracerLvl1
     {
@@ -131,6 +171,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 7;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl6>(), 1)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class RuneTracerLvl8 : RuneTracerLvl1
     {
@@ -138,6 +186,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 8;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl7>(), 1)
+                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
 }

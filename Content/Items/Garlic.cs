@@ -77,6 +77,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 2;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<GarlicLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<GarlicLvl1>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class GarlicLvl3 : GarlicLvl1
     {
@@ -84,6 +92,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 3;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<GarlicLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<GarlicLvl2>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
     public class GarlicLvl4 : GarlicLvl1
@@ -93,6 +109,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 4;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<GarlicLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<GarlicLvl3>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class GarlicLvl5 : GarlicLvl1
     {
@@ -100,6 +124,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 5;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<GarlicLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<GarlicLvl4>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
     public class GarlicLvl6 : GarlicLvl1
@@ -109,6 +141,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 6;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<GarlicLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<GarlicLvl5>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class GarlicLvl7 : GarlicLvl1
     {
@@ -117,6 +157,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 7;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<GarlicLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<GarlicLvl6>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class GarlicLvl8 : GarlicLvl1
     {
@@ -124,6 +172,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 8;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<GarlicLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<GarlicLvl7>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
 }

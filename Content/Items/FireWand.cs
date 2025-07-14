@@ -89,6 +89,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 2;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<FireWandLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<FireWandLvl1>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class FireWandLvl3 : FireWandLvl1
     {
@@ -96,6 +104,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 3;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<FireWandLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<FireWandLvl2>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
     public class FireWandLvl4 : FireWandLvl1
@@ -105,6 +121,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 4;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<FireWandLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<FireWandLvl3>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class FireWandLvl5 : FireWandLvl1
     {
@@ -112,6 +136,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 5;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<FireWandLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<FireWandLvl4>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
     public class FireWandLvl6 : FireWandLvl1
@@ -121,6 +153,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 6;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<FireWandLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<FireWandLvl5>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class FireWandLvl7 : FireWandLvl1
     {
@@ -129,6 +169,14 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 7;
         }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<FireWandLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<FireWandLvl6>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
+        }
     }
     public class FireWandLvl8 : FireWandLvl1
     {
@@ -136,6 +184,14 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 8;
+        }
+        public override void AddRecipes()
+        {
+            Recipe.Create(Type)
+                .AddIngredient(ModContent.ItemType<FireWandLvl1>(), 1)
+                .AddIngredient(ModContent.ItemType<FireWandLvl7>(), 1)
+                .AddTile(TileID.WorkBenches)
+                .Register();
         }
     }
 }

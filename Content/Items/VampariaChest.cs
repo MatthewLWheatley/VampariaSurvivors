@@ -34,6 +34,7 @@ namespace VampariaSurvivors.Content.Items
                 (ModContent.ItemType<MagicWandLvl1>(), 80),
                 (ModContent.ItemType<RuneTracerLvl1>(), 60),
                 (ModContent.ItemType<FireWandLvl1>(), 60),
+                (ModContent.ItemType<boneLvl1>(), 80),
                 //add other weapons
             };
 
