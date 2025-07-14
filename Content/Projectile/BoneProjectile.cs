@@ -13,48 +13,54 @@ using Terraria.ModLoader;
 
 namespace VampariaSurvivors.Content.Projectile
 {
-    public class MagicWandControllerProjectile : ModProjectile
+    public class boneControllerProjectile : ModProjectile
     {
         public int level = 1;
         private int manaTimer = 0;
         private int shootTimer = 0;
         private float ManaCost = 10f;
-        
-        private int shootCooldown = 60;
-        private int projectileCount = 2;
+
+        private int shootCooldown = 180;
+        private int projectileCount = 1;
         private int projectilePenetration = 1;
-        private int damage = 20;
+        private int damage = 10;
 
         private int burstDelay = 6;
         private int burstCooldown = 0;
 
         private int burstShotCount = 0;
-        
+
+        private int duration = 120;
+        private float speed = 12f;
+
         public override void OnSpawn(IEntitySource source)
         {
             if (source is EntitySource_ItemUse itemUse)
             {
                 ManaCost = Main.player[Projectile.owner].GetManaCost(itemUse.Item) / 2;
 
-                if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl1>()) level = 1;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl2>()) level = 2;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl3>()) level = 3;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl4>()) level = 4;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl5>()) level = 5;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl6>()) level = 6;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl7>()) level = 7;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl8>()) level = 8;
+                if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl1>()) level = 1;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl2>()) level = 2;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl3>()) level = 3;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl4>()) level = 4;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl5>()) level = 5;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl6>()) level = 6;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl7>()) level = 7;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl8>()) level = 8;
             }
 
             damage = (int)(damage * (1 + 0.25f * (level - 1)));
 
-            if (level >= 2) projectileCount = 2;
-            if (level >= 3) shootCooldown = 48;
-            if (level >= 4) projectileCount = 3;
+            if (level >= 2) duration += 16;
+            if (level >= 3) projectileCount += 1;
+            if (level >= 3) damage += 20;
+            if (level >= 4) speed *= 1.5f;
+            if (level >= 5) projectileCount += 1;
             if (level >= 5) damage += 20;
-            if (level >= 6) projectileCount = 4;
-            if (level >= 7) projectilePenetration = 2;
-            if (level >= 8) damage += 20;
+            if (level >= 6) duration += 16;
+            if (level >= 7) damage += 20;
+            if (level >= 8) duration += 16;
+            if (level >= 8) speed *= 1.5f;
         }
 
         public override void SetDefaults()
@@ -140,7 +146,7 @@ namespace VampariaSurvivors.Content.Projectile
             float shootSpeed = 12f;
             Vector2 velocity = shootDirection * shootSpeed;
 
-            int projectileType = ModContent.ProjectileType<MagicWandProjectile>();
+            int projectileType = ModContent.ProjectileType<boneProjectile>();
 
             Terraria.Projectile.NewProjectile(
                 Projectile.GetSource_FromThis(),
@@ -150,18 +156,19 @@ namespace VampariaSurvivors.Content.Projectile
                 damage,
                 2f,
                 player.whoAmI,
-                ai0: projectilePenetration
+                ai0: duration
             );
 
         }
     }
-    public class MagicWandProjectile : ModProjectile
-    { 
+    public class boneProjectile : ModProjectile
+    {
         private int penetrationsLeft;
-        private List<Vector2> trailPositions = new List<Vector2>();
-        private int maxTrailLength = 6;
-        private float homingStrength = 0.05f;
+        private float homingStrength = 1.0f;
+        private int duration = 10;
+        private int timeLeft = 0;
 
+        private NPC LastHitNPC = null;
         public override void SetDefaults()
         {
             Projectile.width = 8;
@@ -172,61 +179,43 @@ namespace VampariaSurvivors.Content.Projectile
             Projectile.ignoreWater = true;
             Projectile.tileCollide = true;
             Projectile.light = 0.5f;
-            Projectile.penetrate = 100;
+            Projectile.penetrate = -1;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
-            penetrationsLeft = (int)Projectile.ai[0];
-            if (penetrationsLeft <= 0) penetrationsLeft = 1;
+            duration = (int)Projectile.ai[0];
         }
 
         public override void AI()
         {
-            NPC target = FindNearestEnemy(Projectile.Center, 200f);
-            if (target != null)
+            if(timeLeft > duration) 
             {
-                Vector2 directionToTarget = Vector2.Normalize(target.Center - Projectile.Center);
-                
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, directionToTarget * Projectile.velocity.Length(), homingStrength);
+                Projectile.Kill();
+                return;
             }
-            
-            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-            
-            trailPositions.Insert(0, Projectile.Center);
-            if (trailPositions.Count > maxTrailLength)
-            {
-                trailPositions.RemoveAt(trailPositions.Count - 1);
-            }
-            
-            if (Projectile.timeLeft < 30)
-            {
-                Projectile.alpha += 8;
-            }
+            timeLeft++;
+            Projectile.rotation += .05f;
+
         }
 
         private NPC FindNearestEnemy(Vector2 position, float maxRange)
         {
             NPC closest = null;
             float closestDistance = maxRange;
-            Vector2 currentDirection = Vector2.Normalize(Projectile.velocity);
 
             for (int i = 0; i < Main.maxNPCs; i++)
             {
                 NPC npc = Main.npc[i];
                 if (npc.active && !npc.friendly && !npc.dontTakeDamage && npc.lifeMax > 5)
                 {
+                    if (npc == LastHitNPC) continue;
+
                     float distance = Vector2.Distance(npc.Center, position);
                     if (distance < closestDistance)
                     {
-                        Vector2 directionToEnemy = Vector2.Normalize(npc.Center - position);
-                        float dotProduct = Vector2.Dot(currentDirection, directionToEnemy);
-                        
-                        if (dotProduct > 0.9f)
-                        {
-                            closest = npc;
-                            closestDistance = distance;
-                        }
+                        closest = npc;
+                        closestDistance = distance;
                     }
                 }
             }
@@ -236,55 +225,36 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
-            penetrationsLeft--;
-            if (penetrationsLeft <= 0)
+            LastHitNPC = target;
+            SoundEngine.PlaySound(SoundID.DD2_SkeletonHurt, Projectile.position);
+
+            NPC target2 = FindNearestEnemy(Projectile.Center, 200f);
+            if (target2 != null)
             {
-                Projectile.Kill();
+                Vector2 directionToTarget = Vector2.Normalize(target2.Center - Projectile.Center);
+                float currentSpeed = Projectile.velocity.Length();
+
+                Projectile.velocity = directionToTarget * currentSpeed;
             }
         }
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
+            SoundEngine.PlaySound(SoundID.DD2_SkeletonHurt, Projectile.position);
 
-            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
+            NPC target2 = FindNearestEnemy(Projectile.Center, 200f);
+            if (target2 != null)
+            {
+                Vector2 directionToTarget = Vector2.Normalize(target2.Center - Projectile.Center);
+
+                Projectile.velocity = Vector2.Lerp(Projectile.velocity, directionToTarget * Projectile.velocity.Length(), homingStrength);
+            }
 
             return true;
         }
 
-        // fucking ew, but it works
         public override bool PreDraw(ref Color lightColor)
         {
-            if (trailPositions.Count > 1)
-            {
-                for (int i = 1; i < trailPositions.Count; i++)
-                {
-                    Vector2 drawPosition = trailPositions[i] - Main.screenPosition;
-
-                    float trailAlpha = (float)(maxTrailLength - i) / maxTrailLength;
-                    trailAlpha *= 0.6f;
-
-                    float trailScale = trailAlpha * 0.8f;
-
-                    Color trailColor = Color.LightBlue * trailAlpha * (1f - Projectile.alpha / 255f);
-
-                    Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-                    Vector2 origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
-
-                    Main.EntitySpriteDraw(
-                        texture,
-                        drawPosition,
-                        null,
-                        trailColor,
-                        Projectile.rotation,
-                        origin,
-                        trailScale,
-                        SpriteEffects.None,
-                        0
-                    );
-                }
-            }
-
             Texture2D mainTexture = ModContent.Request<Texture2D>(Texture).Value;
             Vector2 mainDrawPosition = Projectile.Center - Main.screenPosition;
             Vector2 mainOrigin = new Vector2(mainTexture.Width / 2f, mainTexture.Height / 2f);

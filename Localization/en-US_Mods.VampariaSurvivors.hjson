@@ -175,6 +175,46 @@ Items: {
 		DisplayName: Rune Tracer Lvl8
 		Tooltip: ""
 	}
+
+	boneLvl1: {
+		DisplayName: bone Lvl1
+		Tooltip: ""
+	}
+
+	boneLvl2: {
+		DisplayName: bone Lvl2
+		Tooltip: ""
+	}
+
+	boneLvl3: {
+		DisplayName: bone Lvl3
+		Tooltip: ""
+	}
+
+	boneLvl4: {
+		DisplayName: bone Lvl4
+		Tooltip: ""
+	}
+
+	boneLvl5: {
+		DisplayName: bone Lvl5
+		Tooltip: ""
+	}
+
+	boneLvl6: {
+		DisplayName: bone Lvl6
+		Tooltip: ""
+	}
+
+	boneLvl7: {
+		DisplayName: bone Lvl7
+		Tooltip: ""
+	}
+
+	boneLvl8: {
+		DisplayName: bone Lvl8
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -186,4 +226,6 @@ Projectiles: {
 	FireWandProjectile.DisplayName: Fire Wand Projectile
 	RuneTracerControllerProjectile.DisplayName: Rune Tracer Controller Projectile
 	RuneTracerProjectile.DisplayName: Rune Tracer Projectile
+	boneControllerProjectile.DisplayName: bone Controller Projectile
+	boneProjectile.DisplayName: bone Projectile
 }
