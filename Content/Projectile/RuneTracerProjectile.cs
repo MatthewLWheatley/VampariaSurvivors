@@ -97,6 +97,13 @@ namespace VampariaSurvivors.Content.Projectile
                 ShootAtTarget(player);
                 shootTimer = 0;
             }
+
+            Vector2 playerPos = player.Center;
+
+
+            // Left boundary
+            
+
         }
 
         private NPC FindNearestEnemy(Vector2 position, float maxRange)
@@ -197,6 +204,7 @@ namespace VampariaSurvivors.Content.Projectile
             }
             int actualScreenWidth = Main.graphics.GraphicsDevice.Viewport.Width;
             int actualScreenHeight = Main.graphics.GraphicsDevice.Viewport.Height;
+            Main.NewText(" " + Main.ScreenSize.X + " " + Main.ScreenSize.Y);
 
             int horizontalOffset = 0;
             if (actualScreenWidth > maxWidth)
@@ -213,21 +221,21 @@ namespace VampariaSurvivors.Content.Projectile
             if(verticalOffset > horizontalOffset)horizontalOffset = (int)(verticalOffset / Main.graphics.GraphicsDevice.Viewport.AspectRatio);
             Projectile.rotation += 0.01f;
 
-            if (Projectile.position.X <= Main.screenPosition.X + horizontalOffset + (Projectile.height * 2))
+            if (Projectile.position.X <= Main.player[Projectile.owner].position.X - Main.ViewSize.X/2 + Projectile.height*2)
             {
-                Projectile.velocity.X = -Projectile.velocity.X;
+                Projectile.velocity.X = Math.Abs(Projectile.velocity.X);
             }
-            if (Projectile.position.X >= Main.screenPosition.X + Main.screenWidth - horizontalOffset - (Projectile.height * 2))
+            if (Projectile.position.X >= Main.player[Projectile.owner].position.X + Main.ViewSize.X/2 - (Projectile.height))
             { 
-                Projectile.velocity.X = -Projectile.velocity.X;
+                Projectile.velocity.X = -Math.Abs(Projectile.velocity.X);
             }
-            if (Projectile.position.Y <= Main.screenPosition.Y + verticalOffset + (Projectile.height * 2))
+            if (Projectile.position.Y <= Main.player[Projectile.owner].position.Y - Main.ViewSize.Y / 2 + 32)
             {
-                Projectile.velocity.Y = -Projectile.velocity.Y;
+                Projectile.velocity.Y = Math.Abs(Projectile.velocity.Y);
             }
-            if (Projectile.position.Y > Main.screenPosition.Y + Main.screenHeight - verticalOffset - (Projectile.height * 2)) 
+            if (Projectile.position.Y >= Main.player[Projectile.owner].position.Y + Main.ViewSize.Y / 2)
             {
-                Projectile.velocity.Y = -Projectile.velocity.Y;
+                Projectile.velocity.Y = -Math.Abs(Projectile.velocity.Y);
             }
 
 
@@ -286,6 +294,7 @@ namespace VampariaSurvivors.Content.Projectile
         // fucking ew, but it works
         public override bool PreDraw(ref Color lightColor)
         {
+
             if (trailPositions.Count > 1)
             {
                 for (int i = 1; i < trailPositions.Count; i++)

@@ -79,7 +79,53 @@ namespace VampariaSurvivors.Content.Items
             tooltips.Add(new TooltipLine(Mod, "Description", "Toggleable Personal Sentry"));
             base.ModifyTooltips(tooltips);
         }
+        public override bool OnPickup(Player player)
+        {
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                Item inventoryItem = player.inventory[i];
 
+                if (inventoryItem.IsAir)
+                    continue;
+
+                if (inventoryItem.ModItem is FireWandLvl1 inven)
+                {
+                    if (inven.Level < 8 && this.Level < 8)
+                    {
+                        int combinedLevel = inven.Level + this.Level;
+
+                        inventoryItem.TurnToAir();
+
+                        int newType = GetLevel(combinedLevel);
+
+                        if (newType != -1)
+                        {
+                            player.QuickSpawnItem(player.GetSource_ItemUse(Item), newType);
+                        }
+
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private int GetLevel(int level)
+        {
+            return level switch
+            {
+                1 => ModContent.ItemType<FireWandLvl1>(),
+                2 => ModContent.ItemType<FireWandLvl2>(),
+                3 => ModContent.ItemType<FireWandLvl3>(),
+                4 => ModContent.ItemType<FireWandLvl4>(),
+                5 => ModContent.ItemType<FireWandLvl5>(),
+                6 => ModContent.ItemType<FireWandLvl6>(),
+                7 => ModContent.ItemType<FireWandLvl7>(),
+                8 => ModContent.ItemType<FireWandLvl8>(),
+                _ => level > 8 ? ModContent.ItemType<FireWandLvl8>() : -1
+            };
+        }
     }
 
     public class FireWandLvl2 : FireWandLvl1

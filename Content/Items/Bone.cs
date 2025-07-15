@@ -79,7 +79,53 @@ namespace VampariaSurvivors.Content.Items
             tooltips.Add(new TooltipLine(Mod, "Description", "Toggleable Personal Sentry"));
             base.ModifyTooltips(tooltips);
         }
+        public override bool OnPickup(Player player)
+        {
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                Item inventoryItem = player.inventory[i];
 
+                if (inventoryItem.IsAir)
+                    continue;
+
+                if (inventoryItem.ModItem is boneLvl1 inven)
+                {
+                    if (inven.Level < 8 && this.Level < 8)
+                    {
+                        int combinedLevel = inven.Level + this.Level;
+
+                        inventoryItem.TurnToAir();
+
+                        int newType = GetLevel(combinedLevel);
+
+                        if (newType != -1)
+                        {
+                            player.QuickSpawnItem(player.GetSource_ItemUse(Item), newType);
+                        }
+
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private int GetLevel(int level)
+        {
+            return level switch
+            {
+                1 => ModContent.ItemType<boneLvl1>(),
+                2 => ModContent.ItemType<boneLvl2>(),
+                3 => ModContent.ItemType<boneLvl3>(),
+                4 => ModContent.ItemType<boneLvl4>(),
+                5 => ModContent.ItemType<boneLvl5>(),
+                6 => ModContent.ItemType<boneLvl6>(),
+                7 => ModContent.ItemType<boneLvl7>(),
+                8 => ModContent.ItemType<boneLvl8>(),
+                _ => level > 8 ? ModContent.ItemType<boneLvl8>() : -1
+            };
+        }
     }
 
     public class boneLvl2 : boneLvl1

@@ -74,6 +74,53 @@ namespace VampariaSurvivors.Content.Items
             base.ModifyTooltips(tooltips);
         }
 
+        public override bool OnPickup(Player player)
+        {
+            for (int i = 0; i < player.inventory.Length; i++)
+            {
+                Item inventoryItem = player.inventory[i];
+
+                if (inventoryItem.IsAir)
+                    continue;
+
+                if (inventoryItem.ModItem is MagicWandLvl1 invenWand)
+                {
+                    if (invenWand.Level < 8 && this.Level < 8)
+                    {
+                        int combinedLevel = invenWand.Level + this.Level;
+
+                        inventoryItem.TurnToAir();
+
+                        int newWandType = GetLevel(combinedLevel);
+
+                        if (newWandType != -1)
+                        {
+                            player.QuickSpawnItem(player.GetSource_ItemUse(Item), newWandType);
+                        }
+
+                        return false;
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        private int GetLevel(int level)
+        {
+            return level switch
+            {
+                1 => ModContent.ItemType<MagicWandLvl1>(),
+                2 => ModContent.ItemType<MagicWandLvl2>(),
+                3 => ModContent.ItemType<MagicWandLvl3>(),
+                4 => ModContent.ItemType<MagicWandLvl4>(),
+                5 => ModContent.ItemType<MagicWandLvl5>(),
+                6 => ModContent.ItemType<MagicWandLvl6>(),
+                7 => ModContent.ItemType<MagicWandLvl7>(),
+                8 => ModContent.ItemType<MagicWandLvl8>(),
+                _ => level > 8 ? ModContent.ItemType<MagicWandLvl8>() : -1
+            };
+        }
     }
 
     public class MagicWandLvl2 : MagicWandLvl1
@@ -83,14 +130,6 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 2;
         }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
     }
     public class MagicWandLvl3 : MagicWandLvl1
     {
@@ -98,14 +137,6 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 3;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl2>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
         }
     }
     public class MagicWandLvl4 : MagicWandLvl1
@@ -115,14 +146,6 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 4;
         }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl3>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
     }
     public class MagicWandLvl5 : MagicWandLvl1
     {
@@ -130,14 +153,6 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 5;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl4>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
         }
     }
     public class MagicWandLvl6 : MagicWandLvl1
@@ -147,14 +162,6 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 6;
         }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl5>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
     }
     public class MagicWandLvl7 : MagicWandLvl1
     {
@@ -163,14 +170,6 @@ namespace VampariaSurvivors.Content.Items
             base.SetDefaults();
             Level = 7;
         }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl6>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
     }
     public class MagicWandLvl8 : MagicWandLvl1
     {
@@ -178,14 +177,6 @@ namespace VampariaSurvivors.Content.Items
         {
             base.SetDefaults();
             Level = 8;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl7>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
         }
     }
 }
