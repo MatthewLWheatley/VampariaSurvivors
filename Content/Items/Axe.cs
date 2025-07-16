@@ -10,13 +10,14 @@ using VampariaSurvivors.Content.Projectile;
 
 namespace VampariaSurvivors.Content.Items
 {
-    public class MagicWandLvl1 : ModItem
+    public class AxeLvl1 : ModItem
     {
         public int Level = 1;
-        public override string Texture => "VampariaSurvivors/Content/Items/MagicWand";
+        public override string Texture => "VampariaSurvivors/Content/Items/Axe";
+
         public override void SetDefaults()
         {
-            Item.SetNameOverride("Magic Wand");
+            Item.SetNameOverride("Axe");
             Item.width = 32;
             Item.height = 32;
             Item.useTime = 10;
@@ -28,7 +29,7 @@ namespace VampariaSurvivors.Content.Items
             Item.mana = 20;
             Item.noMelee = true;
             Item.autoReuse = false;
-            Item.shoot = ModContent.ProjectileType<MagicWandControllerProjectile>();
+            Item.shoot = ModContent.ProjectileType<AxeControllerProjectile>();
             Item.shootSpeed = 0f;
         }
 
@@ -37,7 +38,7 @@ namespace VampariaSurvivors.Content.Items
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 if (Main.projectile[i].active && Main.projectile[i].owner == player.whoAmI &&
-                    Main.projectile[i].type == ModContent.ProjectileType<MagicWandControllerProjectile>())
+                    Main.projectile[i].type == ModContent.ProjectileType<AxeControllerProjectile>())
                 {
                     Main.projectile[i].Kill();
                     return false;
@@ -49,29 +50,28 @@ namespace VampariaSurvivors.Content.Items
         public override void ModifyTooltips(List<TooltipLine> tooltips)
         {
             int damage = 20;
-            damage = (int)(damage * (1 + 0.25f * (Level - 1)));
-            int shootCooldown = 60;
             int projectileCount = 2;
-            int projectilePenetration = 1;
+            int projectilePenetration = 3;
+            int shootCooldown = 60;
 
-            if (Level >= 2) projectileCount = 2;
-            if (Level >= 3) shootCooldown = 48;
-            if (Level >= 4) projectileCount = 3;
-            if (Level >= 5) damage += 20;
-            if (Level >= 6) projectileCount = 4;
-            if (Level >= 7) projectilePenetration = 2;
+            if (Level >= 2) projectileCount = 3;
+            if (Level >= 3) damage += 20;
+            if (Level >= 4) projectilePenetration += 2;
+            if (Level >= 5) projectileCount = 4;
+            if (Level >= 6) damage += 20;
+            if (Level >= 7) projectilePenetration += 2;
             if (Level >= 8) damage += 20;
 
             tooltips.Clear();
-            tooltips.Add(new TooltipLine(Mod, "Name", "Magic Wand"));
+            tooltips.Add(new TooltipLine(Mod, "Name", "Axe"));
             tooltips.Add(new TooltipLine(Mod, "Level", "Level " + Level));
             tooltips.Add(new TooltipLine(Mod, "ManaCost", "Mana Cost: " + Main.LocalPlayer.GetManaCost(Item)));
             tooltips.Add(new TooltipLine(Mod, "Manamaintenance", "Mana Maintenance: " + Main.LocalPlayer.GetManaCost(Item) / 2));
             tooltips.Add(new TooltipLine(Mod, "Damage", "Damage: " + damage));
-            tooltips.Add(new TooltipLine(Mod, "ProjectileCount", "Projecttile Count: " + projectileCount));
-            tooltips.Add(new TooltipLine(Mod, "ProjectilePenetration", "Projecttile Penetration: " + projectilePenetration));
+            tooltips.Add(new TooltipLine(Mod, "ProjectileCount", "Projectile Count: " + projectileCount));
+            tooltips.Add(new TooltipLine(Mod, "ProjectilePenetration", "Projectile Penetration: " + projectilePenetration));
             tooltips.Add(new TooltipLine(Mod, "Cooldown", "Cooldown: " + shootCooldown / 60 + "s"));
-            tooltips.Add(new TooltipLine(Mod, "Description", "Toggleable Personal Sentry"));
+            tooltips.Add(new TooltipLine(Mod, "Description", "Throws axes above that arc downward"));
             base.ModifyTooltips(tooltips);
         }
 
@@ -84,19 +84,19 @@ namespace VampariaSurvivors.Content.Items
                 if (inventoryItem.IsAir)
                     continue;
 
-                if (inventoryItem.ModItem is MagicWandLvl1 invenWand)
+                if (inventoryItem.ModItem is AxeLvl1 invenAxe)
                 {
-                    if (invenWand.Level < 8 && this.Level < 8)
+                    if (invenAxe.Level < 8 && this.Level < 8)
                     {
-                        int combinedLevel = invenWand.Level + this.Level;
+                        int combinedLevel = invenAxe.Level + this.Level;
 
                         inventoryItem.TurnToAir();
 
-                        int newWandType = GetLevel(combinedLevel);
+                        int newAxeType = GetLevel(combinedLevel);
 
-                        if (newWandType != -1)
+                        if (newAxeType != -1)
                         {
-                            player.QuickSpawnItem(player.GetSource_ItemUse(Item), newWandType);
+                            player.QuickSpawnItem(player.GetSource_ItemUse(Item), newAxeType);
                         }
 
                         return false;
@@ -111,20 +111,20 @@ namespace VampariaSurvivors.Content.Items
         {
             return level switch
             {
-                1 => ModContent.ItemType<MagicWandLvl1>(),
-                2 => ModContent.ItemType<MagicWandLvl2>(),
-                3 => ModContent.ItemType<MagicWandLvl3>(),
-                4 => ModContent.ItemType<MagicWandLvl4>(),
-                5 => ModContent.ItemType<MagicWandLvl5>(),
-                6 => ModContent.ItemType<MagicWandLvl6>(),
-                7 => ModContent.ItemType<MagicWandLvl7>(),
-                8 => ModContent.ItemType<MagicWandLvl8>(),
-                _ => level > 8 ? ModContent.ItemType<MagicWandLvl8>() : -1
+                1 => ModContent.ItemType<AxeLvl1>(),
+                2 => ModContent.ItemType<AxeLvl2>(),
+                3 => ModContent.ItemType<AxeLvl3>(),
+                4 => ModContent.ItemType<AxeLvl4>(),
+                5 => ModContent.ItemType<AxeLvl5>(),
+                6 => ModContent.ItemType<AxeLvl6>(),
+                7 => ModContent.ItemType<AxeLvl7>(),
+                8 => ModContent.ItemType<AxeLvl8>(),
+                _ => level > 8 ? ModContent.ItemType<AxeLvl8>() : -1
             };
         }
     }
 
-    public class MagicWandLvl2 : MagicWandLvl1
+    public class AxeLvl2 : AxeLvl1
     {
         public override void SetDefaults()
         {
@@ -132,7 +132,8 @@ namespace VampariaSurvivors.Content.Items
             Level = 2;
         }
     }
-    public class MagicWandLvl3 : MagicWandLvl1
+
+    public class AxeLvl3 : AxeLvl1
     {
         public override void SetDefaults()
         {
@@ -140,7 +141,8 @@ namespace VampariaSurvivors.Content.Items
             Level = 3;
         }
     }
-    public class MagicWandLvl4 : MagicWandLvl1
+
+    public class AxeLvl4 : AxeLvl1
     {
         public override void SetDefaults()
         {
@@ -148,7 +150,8 @@ namespace VampariaSurvivors.Content.Items
             Level = 4;
         }
     }
-    public class MagicWandLvl5 : MagicWandLvl1
+
+    public class AxeLvl5 : AxeLvl1
     {
         public override void SetDefaults()
         {
@@ -156,7 +159,8 @@ namespace VampariaSurvivors.Content.Items
             Level = 5;
         }
     }
-    public class MagicWandLvl6 : MagicWandLvl1
+
+    public class AxeLvl6 : AxeLvl1
     {
         public override void SetDefaults()
         {
@@ -164,7 +168,8 @@ namespace VampariaSurvivors.Content.Items
             Level = 6;
         }
     }
-    public class MagicWandLvl7 : MagicWandLvl1
+
+    public class AxeLvl7 : AxeLvl1
     {
         public override void SetDefaults()
         {
@@ -172,7 +177,8 @@ namespace VampariaSurvivors.Content.Items
             Level = 7;
         }
     }
-    public class MagicWandLvl8 : MagicWandLvl1
+
+    public class AxeLvl8 : AxeLvl1
     {
         public override void SetDefaults()
         {

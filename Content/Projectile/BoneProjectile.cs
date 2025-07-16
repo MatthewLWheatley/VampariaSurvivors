@@ -13,7 +13,7 @@ using Terraria.ModLoader;
 
 namespace VampariaSurvivors.Content.Projectile
 {
-    public class boneControllerProjectile : ModProjectile
+    public class BoneControllerProjectile : ModProjectile
     {
         public int level = 1;
         private int manaTimer = 0;
@@ -39,14 +39,14 @@ namespace VampariaSurvivors.Content.Projectile
             {
                 ManaCost = Main.player[Projectile.owner].GetManaCost(itemUse.Item) / 2;
 
-                if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl1>()) level = 1;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl2>()) level = 2;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl3>()) level = 3;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl4>()) level = 4;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl5>()) level = 5;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl6>()) level = 6;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl7>()) level = 7;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl8>()) level = 8;
+                if (itemUse.Item.type == ModContent.ItemType<Content.Items.BoneLvl1>()) level = 1;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.BoneLvl2>()) level = 2;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.BoneLvl3>()) level = 3;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.BoneLvl4>()) level = 4;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.BoneLvl5>()) level = 5;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.BoneLvl6>()) level = 6;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.BoneLvl7>()) level = 7;
+                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.BoneLvl8>()) level = 8;
             }
 
             damage = (int)(damage * (1 + 0.25f * (level - 1)));
@@ -146,7 +146,7 @@ namespace VampariaSurvivors.Content.Projectile
             float shootSpeed = 12f;
             Vector2 velocity = shootDirection * shootSpeed;
 
-            int projectileType = ModContent.ProjectileType<boneProjectile>();
+            int projectileType = ModContent.ProjectileType<BoneProjectile>();
 
             Terraria.Projectile.NewProjectile(
                 Projectile.GetSource_FromThis(),
@@ -161,7 +161,7 @@ namespace VampariaSurvivors.Content.Projectile
 
         }
     }
-    public class boneProjectile : ModProjectile
+    public class BoneProjectile : ModProjectile
     {
         private int penetrationsLeft;
         private float homingStrength = 1.0f;

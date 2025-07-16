@@ -12,6 +12,7 @@ namespace VampariaSurvivors.Content.Items
     {
 
         public int Level = 1;
+        public override string Texture => "VampariaSurvivors/Content/Items/Garlic";
         public override void SetDefaults()
         {
             Item.SetNameOverride("Garlic");

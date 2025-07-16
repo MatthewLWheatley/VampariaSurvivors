@@ -14,6 +14,7 @@ namespace VampariaSurvivors.Content.Items
     public class RuneTracerLvl1 : ModItem
     {
         public int Level = 1;
+        public override string Texture => "VampariaSurvivors/Content/Items/RuneTracer";
         public override void SetDefaults()
         {
             Item.SetNameOverride("Rune Tracer");

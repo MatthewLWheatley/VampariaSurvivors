@@ -13,6 +13,7 @@ namespace VampariaSurvivors.Content.Items
     public class FireWandLvl1 : ModItem
     {
         public int Level = 1;
+        public override string Texture => "VampariaSurvivors/Content/Items/FireWand";
         public override void SetDefaults()
         {
             Item.SetNameOverride("Fire Wand");

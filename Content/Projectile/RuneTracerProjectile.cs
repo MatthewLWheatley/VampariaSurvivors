@@ -195,30 +195,6 @@ namespace VampariaSurvivors.Content.Projectile
         
         public override void AI()
         {
-            int maxWidth = 1920;
-            int maxHeight = 1080;
-            if (Main.graphics.GraphicsDevice.Viewport.Width < 1280 || Main.graphics.GraphicsDevice.Viewport.Height < 720)
-            {
-                maxWidth = 1280;
-                maxHeight = 720;
-            }
-            int actualScreenWidth = Main.graphics.GraphicsDevice.Viewport.Width;
-            int actualScreenHeight = Main.graphics.GraphicsDevice.Viewport.Height;
-            Main.NewText(" " + Main.ScreenSize.X + " " + Main.ScreenSize.Y);
-
-            int horizontalOffset = 0;
-            if (actualScreenWidth > maxWidth)
-            {
-                horizontalOffset = (actualScreenWidth - maxWidth) / 2;
-            }
-
-            int verticalOffset = 0;
-            if (actualScreenHeight > maxHeight)
-            {
-                verticalOffset = (actualScreenHeight - maxHeight) / 2;
-            }
-            if(verticalOffset < horizontalOffset)verticalOffset = (int)(horizontalOffset / Main.graphics.GraphicsDevice.Viewport.AspectRatio);
-            if(verticalOffset > horizontalOffset)horizontalOffset = (int)(verticalOffset / Main.graphics.GraphicsDevice.Viewport.AspectRatio);
             Projectile.rotation += 0.01f;
 
             if (Projectile.position.X <= Main.player[Projectile.owner].position.X - Main.ViewSize.X/2 + Projectile.height*2)

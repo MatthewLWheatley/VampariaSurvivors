@@ -10,13 +10,13 @@ using VampariaSurvivors.Content.Projectile;
 
 namespace VampariaSurvivors.Content.Items
 {
-    public class MagicWandLvl1 : ModItem
+    public class KnifeLvl1 : ModItem
     {
         public int Level = 1;
-        public override string Texture => "VampariaSurvivors/Content/Items/MagicWand";
+        public override string Texture => "VampariaSurvivors/Content/Items/Knife";
         public override void SetDefaults()
         {
-            Item.SetNameOverride("Magic Wand");
+            Item.SetNameOverride("Knife");
             Item.width = 32;
             Item.height = 32;
             Item.useTime = 10;
@@ -28,7 +28,7 @@ namespace VampariaSurvivors.Content.Items
             Item.mana = 20;
             Item.noMelee = true;
             Item.autoReuse = false;
-            Item.shoot = ModContent.ProjectileType<MagicWandControllerProjectile>();
+            Item.shoot = ModContent.ProjectileType<KnifeControllerProjectile>();
             Item.shootSpeed = 0f;
         }
 
@@ -37,7 +37,7 @@ namespace VampariaSurvivors.Content.Items
             for (int i = 0; i < Main.maxProjectiles; i++)
             {
                 if (Main.projectile[i].active && Main.projectile[i].owner == player.whoAmI &&
-                    Main.projectile[i].type == ModContent.ProjectileType<MagicWandControllerProjectile>())
+                    Main.projectile[i].type == ModContent.ProjectileType<KnifeControllerProjectile>())
                 {
                     Main.projectile[i].Kill();
                     return false;
@@ -63,7 +63,7 @@ namespace VampariaSurvivors.Content.Items
             if (Level >= 8) damage += 20;
 
             tooltips.Clear();
-            tooltips.Add(new TooltipLine(Mod, "Name", "Magic Wand"));
+            tooltips.Add(new TooltipLine(Mod, "Name", "Knife"));
             tooltips.Add(new TooltipLine(Mod, "Level", "Level " + Level));
             tooltips.Add(new TooltipLine(Mod, "ManaCost", "Mana Cost: " + Main.LocalPlayer.GetManaCost(Item)));
             tooltips.Add(new TooltipLine(Mod, "Manamaintenance", "Mana Maintenance: " + Main.LocalPlayer.GetManaCost(Item) / 2));
@@ -84,7 +84,7 @@ namespace VampariaSurvivors.Content.Items
                 if (inventoryItem.IsAir)
                     continue;
 
-                if (inventoryItem.ModItem is MagicWandLvl1 invenWand)
+                if (inventoryItem.ModItem is KnifeLvl1 invenWand)
                 {
                     if (invenWand.Level < 8 && this.Level < 8)
                     {
@@ -111,20 +111,20 @@ namespace VampariaSurvivors.Content.Items
         {
             return level switch
             {
-                1 => ModContent.ItemType<MagicWandLvl1>(),
-                2 => ModContent.ItemType<MagicWandLvl2>(),
-                3 => ModContent.ItemType<MagicWandLvl3>(),
-                4 => ModContent.ItemType<MagicWandLvl4>(),
-                5 => ModContent.ItemType<MagicWandLvl5>(),
-                6 => ModContent.ItemType<MagicWandLvl6>(),
-                7 => ModContent.ItemType<MagicWandLvl7>(),
-                8 => ModContent.ItemType<MagicWandLvl8>(),
-                _ => level > 8 ? ModContent.ItemType<MagicWandLvl8>() : -1
+                1 => ModContent.ItemType<KnifeLvl1>(),
+                2 => ModContent.ItemType<KnifeLvl2>(),
+                3 => ModContent.ItemType<KnifeLvl3>(),
+                4 => ModContent.ItemType<KnifeLvl4>(),
+                5 => ModContent.ItemType<KnifeLvl5>(),
+                6 => ModContent.ItemType<KnifeLvl6>(),
+                7 => ModContent.ItemType<KnifeLvl7>(),
+                8 => ModContent.ItemType<KnifeLvl8>(),
+                _ => level > 8 ? ModContent.ItemType<KnifeLvl8>() : -1
             };
         }
     }
 
-    public class MagicWandLvl2 : MagicWandLvl1
+    public class KnifeLvl2 : KnifeLvl1
     {
         public override void SetDefaults()
         {
@@ -132,7 +132,7 @@ namespace VampariaSurvivors.Content.Items
             Level = 2;
         }
     }
-    public class MagicWandLvl3 : MagicWandLvl1
+    public class KnifeLvl3 : KnifeLvl1
     {
         public override void SetDefaults()
         {
@@ -140,7 +140,7 @@ namespace VampariaSurvivors.Content.Items
             Level = 3;
         }
     }
-    public class MagicWandLvl4 : MagicWandLvl1
+    public class KnifeLvl4 : KnifeLvl1
     {
         public override void SetDefaults()
         {
@@ -148,7 +148,7 @@ namespace VampariaSurvivors.Content.Items
             Level = 4;
         }
     }
-    public class MagicWandLvl5 : MagicWandLvl1
+    public class KnifeLvl5 : KnifeLvl1
     {
         public override void SetDefaults()
         {
@@ -156,7 +156,7 @@ namespace VampariaSurvivors.Content.Items
             Level = 5;
         }
     }
-    public class MagicWandLvl6 : MagicWandLvl1
+    public class KnifeLvl6 : KnifeLvl1
     {
         public override void SetDefaults()
         {
@@ -164,7 +164,7 @@ namespace VampariaSurvivors.Content.Items
             Level = 6;
         }
     }
-    public class MagicWandLvl7 : MagicWandLvl1
+    public class KnifeLvl7 : KnifeLvl1
     {
         public override void SetDefaults()
         {
@@ -172,7 +172,7 @@ namespace VampariaSurvivors.Content.Items
             Level = 7;
         }
     }
-    public class MagicWandLvl8 : MagicWandLvl1
+    public class KnifeLvl8 : KnifeLvl1
     {
         public override void SetDefaults()
         {

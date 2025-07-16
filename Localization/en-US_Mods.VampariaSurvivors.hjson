@@ -215,6 +215,166 @@ Items: {
 		DisplayName: bone Lvl8
 		Tooltip: ""
 	}
+
+	KnifeLvl1: {
+		DisplayName: Knife Lvl1
+		Tooltip: ""
+	}
+
+	KnifeLvl2: {
+		DisplayName: Knife Lvl2
+		Tooltip: ""
+	}
+
+	KnifeLvl3: {
+		DisplayName: Knife Lvl3
+		Tooltip: ""
+	}
+
+	KnifeLvl4: {
+		DisplayName: Knife Lvl4
+		Tooltip: ""
+	}
+
+	KnifeLvl5: {
+		DisplayName: Knife Lvl5
+		Tooltip: ""
+	}
+
+	KnifeLvl6: {
+		DisplayName: Knife Lvl6
+		Tooltip: ""
+	}
+
+	KnifeLvl7: {
+		DisplayName: Knife Lvl7
+		Tooltip: ""
+	}
+
+	KnifeLvl8: {
+		DisplayName: Knife Lvl8
+		Tooltip: ""
+	}
+
+	BoneLvl1: {
+		DisplayName: Bone Lvl1
+		Tooltip: ""
+	}
+
+	BoneLvl2: {
+		DisplayName: Bone Lvl2
+		Tooltip: ""
+	}
+
+	BoneLvl3: {
+		DisplayName: Bone Lvl3
+		Tooltip: ""
+	}
+
+	BoneLvl4: {
+		DisplayName: Bone Lvl4
+		Tooltip: ""
+	}
+
+	BoneLvl5: {
+		DisplayName: Bone Lvl5
+		Tooltip: ""
+	}
+
+	BoneLvl6: {
+		DisplayName: Bone Lvl6
+		Tooltip: ""
+	}
+
+	BoneLvl7: {
+		DisplayName: Bone Lvl7
+		Tooltip: ""
+	}
+
+	BoneLvl8: {
+		DisplayName: Bone Lvl8
+		Tooltip: ""
+	}
+
+	WhipLvl1: {
+		DisplayName: Whip Lvl1
+		Tooltip: ""
+	}
+
+	WhipLvl2: {
+		DisplayName: Whip Lvl2
+		Tooltip: ""
+	}
+
+	WhipLvl3: {
+		DisplayName: Whip Lvl3
+		Tooltip: ""
+	}
+
+	WhipLvl4: {
+		DisplayName: Whip Lvl4
+		Tooltip: ""
+	}
+
+	WhipLvl5: {
+		DisplayName: Whip Lvl5
+		Tooltip: ""
+	}
+
+	WhipLvl6: {
+		DisplayName: Whip Lvl6
+		Tooltip: ""
+	}
+
+	WhipLvl7: {
+		DisplayName: Whip Lvl7
+		Tooltip: ""
+	}
+
+	WhipLvl8: {
+		DisplayName: Whip Lvl8
+		Tooltip: ""
+	}
+
+	AxeLvl1: {
+		DisplayName: Axe Lvl1
+		Tooltip: ""
+	}
+
+	AxeLvl2: {
+		DisplayName: Axe Lvl2
+		Tooltip: ""
+	}
+
+	AxeLvl3: {
+		DisplayName: Axe Lvl3
+		Tooltip: ""
+	}
+
+	AxeLvl4: {
+		DisplayName: Axe Lvl4
+		Tooltip: ""
+	}
+
+	AxeLvl5: {
+		DisplayName: Axe Lvl5
+		Tooltip: ""
+	}
+
+	AxeLvl6: {
+		DisplayName: Axe Lvl6
+		Tooltip: ""
+	}
+
+	AxeLvl7: {
+		DisplayName: Axe Lvl7
+		Tooltip: ""
+	}
+
+	AxeLvl8: {
+		DisplayName: Axe Lvl8
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -228,4 +388,12 @@ Projectiles: {
 	RuneTracerProjectile.DisplayName: Rune Tracer Projectile
 	boneControllerProjectile.DisplayName: bone Controller Projectile
 	boneProjectile.DisplayName: bone Projectile
+	KnifeControllerProjectile.DisplayName: Knife Controller Projectile
+	KnifeProjectile.DisplayName: Knife Projectile
+	BoneControllerProjectile.DisplayName: Bone Controller Projectile
+	BoneProjectile.DisplayName: Bone Projectile
+	WhipControllerProjectile.DisplayName: Whip Controller Projectile
+	WhipProjectile.DisplayName: Whip Projectile
+	AxeControllerProjectile.DisplayName: Axe Controller Projectile
+	AxeProjectile.DisplayName: Axe Projectile
 }
