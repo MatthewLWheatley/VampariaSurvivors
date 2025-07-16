@@ -1,9 +1,4 @@
-using log4net.Core;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
@@ -11,109 +6,66 @@ using VampariaSurvivors.Content.Projectile;
 
 namespace VampariaSurvivors.Content.Items
 {
-    public class RuneTracerLvl1 : ModItem
+    public class RuneTracerLvl1 : VSWeapon
     {
-        public int Level = 1;
         public override string Texture => "VampariaSurvivors/Content/Items/RuneTracer";
-        public override void SetDefaults()
-        {
-            Item.SetNameOverride("Rune Tracer");
-            Item.width = 32;
-            Item.height = 32;
-            Item.useTime = 10;
-            Item.useAnimation = 10;
-            Item.useStyle = ItemUseStyleID.HoldUp;
-            Item.DamageType = DamageClass.Magic;
-            Item.damage = 0;
-            Item.knockBack = 1.5f;
-            Item.mana = 20;
-            Item.noMelee = true;
-            Item.autoReuse = false;
-            Item.shoot = ModContent.ProjectileType<RuneTracerControllerProjectile>();
-            Item.shootSpeed = 0f;
-        }
+        public override string WeaponName => "Rune Tracer";
+        public override string WeaponDescription => "Toggleable Personal Sentry";
+        public override int ControllerProjectileType => ModContent.ProjectileType<RuneTracerControllerProjectile>();
+        public override string WeaponIdentifier => "RuneTracer";
 
-        public override bool CanUseItem(Player player)
+        public override int BaseDamage { get; set; } = 20;
+        public override int BaseAmount { get; set; } = 1;
+        public override float BaseSpeed { get; set; } = 10f;
+        public override int BaseDuration { get; set; } = 135;
+        public override int BaseCooldown { get; set; } = 180;
+
+        protected override int GetAmountBonus()
         {
-            for (int i = 0; i < Main.maxProjectiles; i++)
+            return Level switch
             {
-                if (Main.projectile[i].active && Main.projectile[i].owner == player.whoAmI &&
-                    Main.projectile[i].type == ModContent.ProjectileType<RuneTracerControllerProjectile>())
-                {
-                    Main.projectile[i].Kill();
-                    return false;
-                }
-            }
-            return true;
+                >= 7 => 2,
+                >= 4 => 1,
+                _ => 0
+            };
         }
 
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        protected override int GetDurationBonus()
         {
-            int damage = 20;
-            int shootCooldown = 180;
-            int projectileCount = 2;
-            damage = (int)(damage * (1 + 0.25f * (Level - 1)));
-            float projectileSpeed = 10f;
-            int duration = 135;
-
-            if (Level >= 2) damage += 10;
-            if (Level >= 2) projectileSpeed *= 1.2f;
-            if (Level >= 3) duration += 18;
-            if (Level >= 3) damage += 10;
-            if (Level >= 4) projectileCount = 2;
-            if (Level >= 5) damage += 10;
-            if (Level >= 5) projectileSpeed *= 1.2f;
-            if (Level >= 6) duration += 18;
-            if (Level >= 6) damage += 10;
-            if (Level >= 7) projectileCount = 3;
-            if (Level >= 8) duration += 30;
-
-            tooltips.Clear();
-            tooltips.Add(new TooltipLine(Mod, "Name", "RuneTracer"));
-            tooltips.Add(new TooltipLine(Mod, "Level", "Level " + Level));
-            tooltips.Add(new TooltipLine(Mod, "ManaCost", "Mana Cost: " + Main.LocalPlayer.GetManaCost(Item)));
-            tooltips.Add(new TooltipLine(Mod, "Manamaintenance", "Mana Maintenance: " + Main.LocalPlayer.GetManaCost(Item) / 2));
-            tooltips.Add(new TooltipLine(Mod, "Damage", "Damage: " + damage));
-            tooltips.Add(new TooltipLine(Mod, "ProjectileCount", "Projecttile Count: " + projectileCount));
-            tooltips.Add(new TooltipLine(Mod, "ProjectileDuration", "Projecttile Duration: " + duration / 60 + "s"));
-            tooltips.Add(new TooltipLine(Mod, "ProjectileSpeed", "Projectile Speed: " + projectileSpeed + " tiles/s"));
-            tooltips.Add(new TooltipLine(Mod, "Cooldown", "Cooldown: " + shootCooldown / 60 + "s"));
-            tooltips.Add(new TooltipLine(Mod, "Description", "Toggleable Personal Sentry"));
-            base.ModifyTooltips(tooltips);
+            int bonus = 0;
+            if (Level >= 3) bonus += 18;
+            if (Level >= 6) bonus += 18;
+            if (Level >= 8) bonus += 30;
+            return bonus;
         }
-        public override bool OnPickup(Player player)
+
+        protected override float GetSpeedScale()
         {
-            for (int i = 0; i < player.inventory.Length; i++)
+            float scale = 1.0f;
+            if (Level >= 2) scale *= 1.2f;
+            if (Level >= 5) scale *= 1.2f;
+            return scale;
+        }
+
+        protected override float GetDamageScale()
+        {
+            float baseScale = base.GetDamageScale();
+
+            int flatBonus = 0;
+            if (Level >= 2) flatBonus += 10;
+            if (Level >= 3) flatBonus += 10;
+            if (Level >= 5) flatBonus += 10;
+            if (Level >= 6) flatBonus += 10;
+
+            if (flatBonus > 0)
             {
-                Item inventoryItem = player.inventory[i];
-
-                if (inventoryItem.IsAir)
-                    continue;
-
-                if (inventoryItem.ModItem is RuneTracerLvl1 inven)
-                {
-                    if (inven.Level < 8 && this.Level < 8)
-                    {
-                        int combinedLevel = inven.Level + this.Level;
-
-                        inventoryItem.TurnToAir();
-
-                        int newType = GetLevel(combinedLevel);
-
-                        if (newType != -1)
-                        {
-                            player.QuickSpawnItem(player.GetSource_ItemUse(Item), newType);
-                        }
-
-                        return false;
-                    }
-                }
+                baseScale += (float)flatBonus / BaseDamage;
             }
 
-            return true;
+            return baseScale;
         }
 
-        private int GetLevel(int level)
+        protected override int GetWeaponTypeAtLevel(int level)
         {
             return level switch
             {
@@ -132,114 +84,36 @@ namespace VampariaSurvivors.Content.Items
 
     public class RuneTracerLvl2 : RuneTracerLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 2;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 2;
     }
+
     public class RuneTracerLvl3 : RuneTracerLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 3;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl2>(), 1)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 3;
     }
+
     public class RuneTracerLvl4 : RuneTracerLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 4;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl3>(), 1)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 4;
     }
+
     public class RuneTracerLvl5 : RuneTracerLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 5;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl4>(), 1)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 5;
     }
+
     public class RuneTracerLvl6 : RuneTracerLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 6;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl5>(), 1)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 6;
     }
+
     public class RuneTracerLvl7 : RuneTracerLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 7;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl6>(), 1)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 7;
     }
+
     public class RuneTracerLvl8 : RuneTracerLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 8;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl7>(), 1)
-                .AddIngredient(ModContent.ItemType<RuneTracerLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 8;
     }
 }

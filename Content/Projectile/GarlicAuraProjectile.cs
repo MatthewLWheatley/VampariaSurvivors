@@ -6,50 +6,43 @@ using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using VampariaSurvivors.Content.Items;
 
 namespace VampariaSurvivors.Content.Projectile
 {
+    // i did this one first so i could be the structure no thinking about it, its nothing like the rest of the weapons
     public class GarlicAuraProjectile : ModProjectile
     {
-        public int level = 1;
-
         private int manaTimer = 0;
         private float currentRotation = 0f;
         private float rotationSpeed = 0.02f;
-        
+
         private Dictionary<int, int> enemyCooldowns = new Dictionary<int, int>();
-        private int DAMAGE_COOLDOWN = 78;
-
-        private int Damage = 20;
-
-        
-        private float scale = 3.5f;
-
         private float ManaCost = 10f;
+
+        private WeaponStats weaponStats;
 
         public override void OnSpawn(IEntitySource source)
         {
             if (source is EntitySource_ItemUse itemUse)
             {
-                ManaCost = Main.player[Projectile.owner].GetManaCost(itemUse.Item)/2;
-                if (itemUse.Item.type == ModContent.ItemType<Content.Items.GarlicLvl1>()) level = 1;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.GarlicLvl2>()) level = 2;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.GarlicLvl3>()) level = 3;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.GarlicLvl4>()) level = 4;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.GarlicLvl5>()) level = 5;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.GarlicLvl6>()) level = 6;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.GarlicLvl7>()) level = 7;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.GarlicLvl8>()) level = 8;
+                ManaCost = Main.player[Projectile.owner].GetManaCost(itemUse.Item) / 2;
 
+                if (itemUse.Item.ModItem is VSWeapon weapon)
+                {
+                    weaponStats = weapon.GetWeaponStats();
+                }
+                else
+                {
+                    weaponStats = new WeaponStats
+                    {
+                        Damage = 20,
+                        Area = 3.5f,
+                        ProjectileInterval = 78,
+                        Knockback = 0f
+                    };
+                }
             }
-            Damage = (int)(Damage*(1+.2*(level-1)));
-            if (level > 1) scale = 3.5f * 1.4f;
-            if (level > 2) DAMAGE_COOLDOWN = 72;
-            if (level > 3) scale = 3.5f * 1.6f;
-            if (level > 4) DAMAGE_COOLDOWN = 66;
-            if (level > 5) scale = 3.5f * 1.8f;
-            if (level > 6) DAMAGE_COOLDOWN = 60;
-            if (level > 7) scale = 3.5f * 2.0f; 
         }
 
         public override void SetDefaults()
@@ -89,9 +82,8 @@ namespace VampariaSurvivors.Content.Projectile
                 }
             }
 
-            float auraRadius = (scale +.5f)*16;
-            
-            //update cooldowns and remove expired ones
+            float auraRadius = (weaponStats.Area + 0.5f) * 16;
+
             List<int> expiredKeys = new List<int>();
             foreach (var kvp in enemyCooldowns)
             {
@@ -112,11 +104,9 @@ namespace VampariaSurvivors.Content.Projectile
                     {
                         int uniqueKey = npc.whoAmI;
 
-                        // Check enemy
                         if (!enemyCooldowns.ContainsKey(uniqueKey))
                         {
-                            // damage
-                            int damage = Damage;
+                            int damage = weaponStats.Damage;
                             npc.StrikeNPC(npc.CalculateHitInfo(damage, 0, false, 0));
 
                             if (Main.netMode != NetmodeID.Server)
@@ -124,8 +114,7 @@ namespace VampariaSurvivors.Content.Projectile
                                 Main.NewText($"Garlic hit NPC {npc.whoAmI} for {damage} damage");
                             }
 
-                            // Add enemy
-                            enemyCooldowns[uniqueKey] = DAMAGE_COOLDOWN;
+                            enemyCooldowns[uniqueKey] = weaponStats.ProjectileInterval;
                         }
                     }
                 }
@@ -134,9 +123,7 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-
             SoundEngine.PlaySound(SoundID.Splash, Projectile.position);
-
             return true;
         }
 
@@ -145,8 +132,9 @@ namespace VampariaSurvivors.Content.Projectile
             Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
             Vector2 drawPosition = Projectile.Center - Main.screenPosition;
             Vector2 origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
-            
-            
+
+            float visualScale = weaponStats.Area;
+
             Main.EntitySpriteDraw(
                 texture,
                 drawPosition,
@@ -154,11 +142,11 @@ namespace VampariaSurvivors.Content.Projectile
                 Color.White * 0.8f,
                 Projectile.rotation,
                 origin,
-                scale,
+                visualScale,
                 SpriteEffects.None,
                 0
             );
-            
+
             return false;
         }
     }

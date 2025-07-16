@@ -7,6 +7,12 @@
 	<PropertyGroup>
 		
 	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Content\Projectile\AxeProjectile.cs" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="Content\Projectile\AxeProjectile.cs" />
+	</ItemGroup>
 
 	<!-- References -->
 

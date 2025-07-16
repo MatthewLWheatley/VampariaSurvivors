@@ -2,59 +2,46 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using VampariaSurvivors.Content.Items;
 
 namespace VampariaSurvivors.Content.Projectile
 {
     public class FireWandControllerProjectile : ModProjectile
     {
-        public int level = 1;
         private int manaTimer = 0;
         private int shootTimer = 0;
         private float ManaCost = 10f;
-        
-        private int shootCooldown = 180;
-        private int projectileCount = 3;
-        private int projectilePenetration = 0;
-        private int damage = 40;
-        private float projectileSpeed = 3f;
 
-        
+        private WeaponStats weaponStats;
+
         public override void OnSpawn(IEntitySource source)
         {
             if (source is EntitySource_ItemUse itemUse)
             {
                 ManaCost = Main.player[Projectile.owner].GetManaCost(itemUse.Item) / 2;
 
-                if (itemUse.Item.type == ModContent.ItemType<Content.Items.FireWandLvl1>()) level = 1;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.FireWandLvl2>()) level = 2;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.FireWandLvl3>()) level = 3;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.FireWandLvl4>()) level = 4;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.FireWandLvl5>()) level = 5;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.FireWandLvl6>()) level = 6;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.FireWandLvl7>()) level = 7;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.FireWandLvl8>()) level = 8;
+                if (itemUse.Item.ModItem is VSWeapon weapon)
+                {
+                    weaponStats = weapon.GetWeaponStats();
+                }
+                else
+                {
+                    weaponStats = new WeaponStats
+                    {
+                        Damage = 40,
+                        Amount = 3,
+                        Speed = 3f,
+                        Pierce = 0,
+                        Cooldown = 180,
+                        ProjectileInterval = 6
+                    };
+                }
             }
-
-            damage = (int)(damage * (1 + 0.25f * (level - 1)));
-
-            if (level >= 2) damage += 20;
-            if (level >= 3) damage += 20;
-            if (level >= 3) projectileSpeed *= 1.2f;
-            if (level >= 4) damage += 20;
-            if (level >= 5) damage += 20;
-            if (level >= 5) projectileSpeed *= 1.2f;
-            if (level >= 6) damage += 20;
-            if (level >= 7) damage += 20;
-            if (level >= 7) projectileSpeed *= 1.2f;
-            if (level >= 8) damage += 20;
         }
 
         public override void SetDefaults()
@@ -91,7 +78,7 @@ namespace VampariaSurvivors.Content.Projectile
             }
 
             shootTimer++;
-            if (shootTimer >= shootCooldown)
+            if (shootTimer >= weaponStats.Cooldown)
             {
                 NPC target = FindNearestEnemy(Projectile.Center, 800f);
                 if (target != null)
@@ -124,30 +111,25 @@ namespace VampariaSurvivors.Content.Projectile
             return closest;
         }
 
-        //why did this fucking suck so much also i hate radinas
         private void ShootAtTarget(Player player, NPC target)
         {
-
-            for (int i = 0; i < projectileCount; i++)
+            for (int i = 0; i < weaponStats.Amount; i++)
             {
-                // maybe dont be a idiot and update these values every time
-                // if you dont you get repeated caclculated values leading to stupid directions
                 Vector2 shootDirection = Vector2.Normalize(target.Center - player.Center);
+
                 float angleOffset;
-                if (projectileCount == 0)
+                if (weaponStats.Amount == 1)
                 {
                     angleOffset = 0f;
                 }
                 else
                 {
-                    // if odd make projectile to left, if even to right
-                    // step in 1 degree intervals on each side
-                    angleOffset = (i - (projectileCount - 1) / 2f) * 8f;
+                    angleOffset = (i - (weaponStats.Amount - 1) / 2f) * 8f;
                 }
 
                 shootDirection = shootDirection.RotatedBy(MathHelper.ToRadians(angleOffset));
 
-                Vector2 velocity = shootDirection * projectileCount;
+                Vector2 velocity = shootDirection * weaponStats.Speed;
 
                 int projectileType = ModContent.ProjectileType<FireWandProjectile>();
 
@@ -156,15 +138,15 @@ namespace VampariaSurvivors.Content.Projectile
                     player.Center,
                     velocity,
                     projectileType,
-                    damage,
-                    2f,
+                    weaponStats.Damage,
+                    weaponStats.Knockback,
                     player.whoAmI,
-                    ai0: projectilePenetration
+                    ai0: weaponStats.Pierce
                 );
             }
         }
     }
-    
+
     public class FireWandProjectile : ModProjectile
     {
         private int penetrationsLeft;
@@ -194,10 +176,9 @@ namespace VampariaSurvivors.Content.Projectile
         public override void AI()
         {
             NPC target = FindNearestEnemy(Projectile.Center, 200f);
-            if (target != null)
+            if (target != null && homingStrength > 0)
             {
                 Vector2 directionToTarget = Vector2.Normalize(target.Center - Projectile.Center);
-
                 Projectile.velocity = Vector2.Lerp(Projectile.velocity, directionToTarget * Projectile.velocity.Length(), homingStrength);
             }
 
@@ -217,25 +198,26 @@ namespace VampariaSurvivors.Content.Projectile
 
         private NPC FindNearestEnemy(Vector2 position, float maxRange)
         {
-            NPC closest = null;
-            float closestDistance = maxRange;
-            Vector2 currentDirection = Vector2.Normalize(Projectile.velocity);
             List<NPC> potentialTargets = new List<NPC>();
             for (int i = 0; i < Main.maxNPCs; i++)
             {
                 NPC npc = Main.npc[i];
                 if (npc.active && !npc.friendly && !npc.dontTakeDamage && npc.lifeMax > 5)
                 {
-                    potentialTargets.Add(npc);
+                    float distance = Vector2.Distance(npc.Center, position);
+                    if (distance < maxRange)
+                    {
+                        potentialTargets.Add(npc);
+                    }
                 }
             }
 
             if (potentialTargets.Count > 0)
             {
-                closest = potentialTargets[Main.rand.Next(potentialTargets.Count)];
+                return potentialTargets[Main.rand.Next(potentialTargets.Count)];
             }
 
-            return closest;
+            return null;
         }
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
@@ -249,13 +231,10 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            
             SoundEngine.PlaySound(SoundID.DD2_BetsyFireballImpact, Projectile.position);
-
             return true;
         }
 
-        // fucking ew, but it works
         public override bool PreDraw(ref Color lightColor)
         {
             if (trailPositions.Count > 1)
@@ -267,7 +246,7 @@ namespace VampariaSurvivors.Content.Projectile
                     float trailAlpha = (float)(maxTrailLength - i) / maxTrailLength;
                     trailAlpha *= 0.6f;
 
-                    float trailScale = trailAlpha * .8f;
+                    float trailScale = trailAlpha * 0.8f;
 
                     Color trailColor = Color.OrangeRed * trailAlpha * (1f - Projectile.alpha / 255f);
 

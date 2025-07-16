@@ -1,35 +1,25 @@
-﻿using log4net.Core;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using VampariaSurvivors.Content.Items;
 
 namespace VampariaSurvivors.Content.Projectile
 {
     public class KnifeControllerProjectile : ModProjectile
     {
-        public int level = 1;
         private int manaTimer = 0;
         private int shootTimer = 0;
         private float ManaCost = 10f;
-
-        private int shootCooldown = 60;
-        private int projectileCount = 2;
-        private int projectilePenetration = 1;
-        private int damage = 20;
-
-        private int burstDelay = 6;
         private int burstCooldown = 0;
-
         private int burstShotCount = 0;
+
+        private WeaponStats weaponStats;
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -37,31 +27,22 @@ namespace VampariaSurvivors.Content.Projectile
             {
                 ManaCost = Main.player[Projectile.owner].GetManaCost(itemUse.Item) / 2;
 
-                if (itemUse.Item.type == ModContent.ItemType<Content.Items.KnifeLvl1>()) level = 1;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.KnifeLvl2>()) level = 2;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.KnifeLvl3>()) level = 3;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.KnifeLvl4>()) level = 4;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.KnifeLvl5>()) level = 5;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.KnifeLvl6>()) level = 6;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.KnifeLvl7>()) level = 7;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.KnifeLvl8>()) level = 8;
+                if (itemUse.Item.ModItem is VSWeapon weapon)
+                {
+                    weaponStats = weapon.GetWeaponStats();
+                }
+                else
+                {
+                    weaponStats = new WeaponStats
+                    {
+                        Damage = 13,
+                        Amount = 1,
+                        Pierce = 1,
+                        Cooldown = 60,
+                        ProjectileInterval = 6
+                    };
+                }
             }
-
-
-            damage = 13;
-            projectileCount = 1;
-            projectilePenetration = 1;
-            burstDelay = 6;
-
-            damage = (int)(damage * (1 + 0.25f * (level - 1)));
-
-            if (level >= 2) projectileCount = 2;
-            if (level >= 3) { projectileCount = 3; damage += 10; }
-            if (level >= 4) { projectileCount = 4; burstDelay = 4; }
-            if (level >= 5) projectilePenetration = 2;
-            if (level >= 6) { projectileCount = 5; burstDelay = 3; }
-            if (level >= 7) { projectileCount = 6; damage += 10; }
-            if (level >= 8) { projectilePenetration = 3; burstDelay = 2; }
         }
 
         public override void SetDefaults()
@@ -98,7 +79,7 @@ namespace VampariaSurvivors.Content.Projectile
             }
 
             shootTimer++;
-            if (shootTimer >= shootCooldown)
+            if (shootTimer >= weaponStats.Cooldown)
             {
                 burstCooldown = 0;
                 burstShotCount = 0;
@@ -106,15 +87,15 @@ namespace VampariaSurvivors.Content.Projectile
             }
 
             burstCooldown++;
-            if (burstCooldown >= burstDelay && burstShotCount < projectileCount)
+            if (burstCooldown >= weaponStats.ProjectileInterval && burstShotCount < weaponStats.Amount)
             {
-                ShootAtTarget(player);
+                ShootKnife(player);
                 burstCooldown = 0;
                 burstShotCount++;
             }
         }
 
-        private void ShootAtTarget(Player player, NPC target = null)
+        private void ShootKnife(Player player)
         {
             Vector2 shootDirection = Vector2.Zero;
 
@@ -147,7 +128,9 @@ namespace VampariaSurvivors.Content.Projectile
                     break;
             }
 
-            float shootSpeed = 12f;
+            
+            float shootSpeed = 12f * weaponStats.Speed;
+            Main.NewText(shootSpeed);
             Vector2 velocity = shootDirection * shootSpeed;
 
             int projectileType = ModContent.ProjectileType<KnifeProjectile>();
@@ -157,13 +140,14 @@ namespace VampariaSurvivors.Content.Projectile
                 startPosition,
                 velocity,
                 projectileType,
-                damage,
-                2f,
+                weaponStats.Damage,
+                weaponStats.Knockback,
                 player.whoAmI,
-                ai0: projectilePenetration
+                ai0: weaponStats.Pierce
             );
         }
     }
+
     public class KnifeProjectile : ModProjectile
     {
         private int penetrationsLeft;
@@ -193,19 +177,21 @@ namespace VampariaSurvivors.Content.Projectile
         public override void AI()
         {
             NPC target = FindNearestEnemy(Projectile.Center, 200f);
-            if (target != null)
+            if (target != null && homingStrength > 0)
             {
                 Vector2 directionToTarget = Vector2.Normalize(target.Center - Projectile.Center);
-
                 Projectile.velocity = Vector2.Lerp(Projectile.velocity, directionToTarget * Projectile.velocity.Length(), homingStrength);
             }
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
-            trailPositions.Insert(0, Projectile.Center);
-            if (trailPositions.Count > maxTrailLength)
+            if (maxTrailLength > 0)
             {
-                trailPositions.RemoveAt(trailPositions.Count - 1);
+                trailPositions.Insert(0, Projectile.Center);
+                if (trailPositions.Count > maxTrailLength)
+                {
+                    trailPositions.RemoveAt(trailPositions.Count - 1);
+                }
             }
 
             if (Projectile.timeLeft < 30)
@@ -255,16 +241,13 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-
             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
-
             return true;
         }
 
-        // fucking ew, but it works
         public override bool PreDraw(ref Color lightColor)
         {
-            if (trailPositions.Count > 1)
+            if (trailPositions.Count > 1 && maxTrailLength > 0)
             {
                 for (int i = 1; i < trailPositions.Count; i++)
                 {

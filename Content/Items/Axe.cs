@@ -1,113 +1,63 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using VampariaSurvivors.Content.Projectile;
 
 namespace VampariaSurvivors.Content.Items
 {
-    public class AxeLvl1 : ModItem
+    public class AxeLvl1 : VSWeapon
     {
-        public int Level = 1;
         public override string Texture => "VampariaSurvivors/Content/Items/Axe";
+        public override string WeaponName => "Axe";
+        public override string WeaponDescription => "Throws axes above that arc downward";
+        public override int ControllerProjectileType => ModContent.ProjectileType<AxeControllerProjectile>();
+        public override string WeaponIdentifier => "Axe";
 
-        public override void SetDefaults()
-        {
-            Item.SetNameOverride("Axe");
-            Item.width = 32;
-            Item.height = 32;
-            Item.useTime = 10;
-            Item.useAnimation = 10;
-            Item.useStyle = ItemUseStyleID.HoldUp;
-            Item.DamageType = DamageClass.Magic;
-            Item.damage = 0;
-            Item.knockBack = 1.5f;
-            Item.mana = 20;
-            Item.noMelee = true;
-            Item.autoReuse = false;
-            Item.shoot = ModContent.ProjectileType<AxeControllerProjectile>();
-            Item.shootSpeed = 0f;
-        }
+        // Base stats for Axe
+        public override int BaseDamage { get; set; } = 20;
+        public override int BaseAmount { get; set; } = 2; // projectileCount
+        public override int BasePierce { get; set; } = 3; // projectilePenetration
+        public override int BaseCooldown { get; set; } = 60;
 
-        public override bool CanUseItem(Player player)
+        // Level progression overrides
+        protected override int GetAmountBonus()
         {
-            for (int i = 0; i < Main.maxProjectiles; i++)
+            return Level switch
             {
-                if (Main.projectile[i].active && Main.projectile[i].owner == player.whoAmI &&
-                    Main.projectile[i].type == ModContent.ProjectileType<AxeControllerProjectile>())
-                {
-                    Main.projectile[i].Kill();
-                    return false;
-                }
-            }
-            return true;
+                >= 5 => 2, // Level 5: 4 projectiles (2 base + 2 bonus)
+                >= 2 => 1, // Level 2: 3 projectiles (2 base + 1 bonus)
+                _ => 0
+            };
         }
 
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        protected override int GetPierceBonus()
         {
-            int damage = 20;
-            int projectileCount = 2;
-            int projectilePenetration = 3;
-            int shootCooldown = 60;
-
-            if (Level >= 2) projectileCount = 3;
-            if (Level >= 3) damage += 20;
-            if (Level >= 4) projectilePenetration += 2;
-            if (Level >= 5) projectileCount = 4;
-            if (Level >= 6) damage += 20;
-            if (Level >= 7) projectilePenetration += 2;
-            if (Level >= 8) damage += 20;
-
-            tooltips.Clear();
-            tooltips.Add(new TooltipLine(Mod, "Name", "Axe"));
-            tooltips.Add(new TooltipLine(Mod, "Level", "Level " + Level));
-            tooltips.Add(new TooltipLine(Mod, "ManaCost", "Mana Cost: " + Main.LocalPlayer.GetManaCost(Item)));
-            tooltips.Add(new TooltipLine(Mod, "Manamaintenance", "Mana Maintenance: " + Main.LocalPlayer.GetManaCost(Item) / 2));
-            tooltips.Add(new TooltipLine(Mod, "Damage", "Damage: " + damage));
-            tooltips.Add(new TooltipLine(Mod, "ProjectileCount", "Projectile Count: " + projectileCount));
-            tooltips.Add(new TooltipLine(Mod, "ProjectilePenetration", "Projectile Penetration: " + projectilePenetration));
-            tooltips.Add(new TooltipLine(Mod, "Cooldown", "Cooldown: " + shootCooldown / 60 + "s"));
-            tooltips.Add(new TooltipLine(Mod, "Description", "Throws axes above that arc downward"));
-            base.ModifyTooltips(tooltips);
+            int bonus = 0;
+            if (Level >= 4) bonus += 2; // Level 4: +2 pierce (5 total)
+            if (Level >= 7) bonus += 2; // Level 7: +2 more pierce (7 total)
+            return bonus;
         }
 
-        public override bool OnPickup(Player player)
+        protected override float GetDamageScale()
         {
-            for (int i = 0; i < player.inventory.Length; i++)
+            float baseScale = base.GetDamageScale(); // 1.0 + (0.25 * (Level - 1))
+
+            // Additional flat damage bonuses at specific levels
+            int flatBonus = 0;
+            if (Level >= 3) flatBonus += 20; // Level 3: +20 damage
+            if (Level >= 6) flatBonus += 20; // Level 6: +20 more damage
+            if (Level >= 8) flatBonus += 20; // Level 8: +20 more damage
+
+            // Convert flat bonus to scale multiplier
+            if (flatBonus > 0)
             {
-                Item inventoryItem = player.inventory[i];
-
-                if (inventoryItem.IsAir)
-                    continue;
-
-                if (inventoryItem.ModItem is AxeLvl1 invenAxe)
-                {
-                    if (invenAxe.Level < 8 && this.Level < 8)
-                    {
-                        int combinedLevel = invenAxe.Level + this.Level;
-
-                        inventoryItem.TurnToAir();
-
-                        int newAxeType = GetLevel(combinedLevel);
-
-                        if (newAxeType != -1)
-                        {
-                            player.QuickSpawnItem(player.GetSource_ItemUse(Item), newAxeType);
-                        }
-
-                        return false;
-                    }
-                }
+                baseScale += (float)flatBonus / BaseDamage;
             }
 
-            return true;
+            return baseScale;
         }
 
-        private int GetLevel(int level)
+        protected override int GetWeaponTypeAtLevel(int level)
         {
             return level switch
             {
@@ -124,66 +74,39 @@ namespace VampariaSurvivors.Content.Items
         }
     }
 
+    // Level variants - now much simpler!
     public class AxeLvl2 : AxeLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 2;
-        }
+        public override int Level { get; set; } = 2;
     }
 
     public class AxeLvl3 : AxeLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 3;
-        }
+        public override int Level { get; set; } = 3;
     }
 
     public class AxeLvl4 : AxeLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 4;
-        }
+        public override int Level { get; set; } = 4;
     }
 
     public class AxeLvl5 : AxeLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 5;
-        }
+        public override int Level { get; set; } = 5;
     }
 
     public class AxeLvl6 : AxeLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 6;
-        }
+        public override int Level { get; set; } = 6;
     }
 
     public class AxeLvl7 : AxeLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 7;
-        }
+        public override int Level { get; set; } = 7;
     }
 
     public class AxeLvl8 : AxeLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 8;
-        }
+        public override int Level { get; set; } = 8;
     }
 }

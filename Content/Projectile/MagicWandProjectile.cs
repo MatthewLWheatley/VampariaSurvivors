@@ -1,60 +1,46 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using VampariaSurvivors.Content.Items;
 
 namespace VampariaSurvivors.Content.Projectile
 {
     public class MagicWandControllerProjectile : ModProjectile
     {
-        public int level = 1;
         private int manaTimer = 0;
         private int shootTimer = 0;
         private float ManaCost = 10f;
-        
-        private int shootCooldown = 60;
-        private int projectileCount = 2;
-        private int projectilePenetration = 1;
-        private int damage = 20;
-
-        private int burstDelay = 6;
         private int burstCooldown = 0;
-
         private int burstShotCount = 0;
-        
+
+        private WeaponStats weaponStats;
+
         public override void OnSpawn(IEntitySource source)
         {
             if (source is EntitySource_ItemUse itemUse)
             {
                 ManaCost = Main.player[Projectile.owner].GetManaCost(itemUse.Item) / 2;
 
-                if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl1>()) level = 1;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl2>()) level = 2;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl3>()) level = 3;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl4>()) level = 4;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl5>()) level = 5;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl6>()) level = 6;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl7>()) level = 7;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.MagicWandLvl8>()) level = 8;
+                if (itemUse.Item.ModItem is VSWeapon weapon)
+                {
+                    weaponStats = weapon.GetWeaponStats();
+                }
+                else
+                {
+                    weaponStats = new WeaponStats
+                    {
+                        Damage = 20,
+                        Amount = 2,
+                        Pierce = 1,
+                        Cooldown = 60,
+                        ProjectileInterval = 6
+                    };
+                }
             }
-
-            damage = (int)(damage * (1 + 0.25f * (level - 1)));
-
-            if (level >= 2) projectileCount = 2;
-            if (level >= 3) shootCooldown = 48;
-            if (level >= 4) projectileCount = 3;
-            if (level >= 5) damage += 20;
-            if (level >= 6) projectileCount = 4;
-            if (level >= 7) projectilePenetration = 2;
-            if (level >= 8) damage += 20;
         }
 
         public override void SetDefaults()
@@ -91,7 +77,7 @@ namespace VampariaSurvivors.Content.Projectile
             }
 
             shootTimer++;
-            if (shootTimer >= shootCooldown)
+            if (shootTimer >= weaponStats.Cooldown)
             {
                 burstCooldown = 0;
                 burstShotCount = 0;
@@ -99,7 +85,7 @@ namespace VampariaSurvivors.Content.Projectile
             }
 
             burstCooldown++;
-            if (burstCooldown >= burstDelay && burstShotCount < projectileCount)
+            if (burstCooldown >= weaponStats.ProjectileInterval && burstShotCount < weaponStats.Amount)
             {
                 NPC target = FindNearestEnemy(Projectile.Center, 800f);
                 if (target != null)
@@ -136,8 +122,7 @@ namespace VampariaSurvivors.Content.Projectile
         private void ShootAtTarget(Player player, NPC target)
         {
             Vector2 shootDirection = Vector2.Normalize(target.Center - player.Center);
-
-            float shootSpeed = 12f;
+            float shootSpeed = 12f * weaponStats.Speed;
             Vector2 velocity = shootDirection * shootSpeed;
 
             int projectileType = ModContent.ProjectileType<MagicWandProjectile>();
@@ -147,18 +132,18 @@ namespace VampariaSurvivors.Content.Projectile
                 player.Center,
                 velocity,
                 projectileType,
-                damage,
-                2f,
+                weaponStats.Damage,
+                weaponStats.Knockback,
                 player.whoAmI,
-                ai0: projectilePenetration
+                ai0: weaponStats.Pierce,
+                ai1: weaponStats.Duration
             );
-
         }
     }
+
     public class MagicWandProjectile : ModProjectile
-    { 
+    {
         private int penetrationsLeft;
-        private List<Vector2> trailPositions = new List<Vector2>();
         private int maxTrailLength = 6;
         private float homingStrength = 0.05f;
 
@@ -187,18 +172,13 @@ namespace VampariaSurvivors.Content.Projectile
             if (target != null)
             {
                 Vector2 directionToTarget = Vector2.Normalize(target.Center - Projectile.Center);
-                
+
                 Projectile.velocity = Vector2.Lerp(Projectile.velocity, directionToTarget * Projectile.velocity.Length(), homingStrength);
             }
-            
+
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-            
-            trailPositions.Insert(0, Projectile.Center);
-            if (trailPositions.Count > maxTrailLength)
-            {
-                trailPositions.RemoveAt(trailPositions.Count - 1);
-            }
-            
+
+
             if (Projectile.timeLeft < 30)
             {
                 Projectile.alpha += 8;
@@ -221,7 +201,7 @@ namespace VampariaSurvivors.Content.Projectile
                     {
                         Vector2 directionToEnemy = Vector2.Normalize(npc.Center - position);
                         float dotProduct = Vector2.Dot(currentDirection, directionToEnemy);
-                        
+
                         if (dotProduct > 0.9f)
                         {
                             closest = npc;
@@ -236,7 +216,6 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
             penetrationsLeft--;
             if (penetrationsLeft <= 0)
             {
@@ -255,36 +234,6 @@ namespace VampariaSurvivors.Content.Projectile
         // fucking ew, but it works
         public override bool PreDraw(ref Color lightColor)
         {
-            if (trailPositions.Count > 1)
-            {
-                for (int i = 1; i < trailPositions.Count; i++)
-                {
-                    Vector2 drawPosition = trailPositions[i] - Main.screenPosition;
-
-                    float trailAlpha = (float)(maxTrailLength - i) / maxTrailLength;
-                    trailAlpha *= 0.6f;
-
-                    float trailScale = trailAlpha * 0.8f;
-
-                    Color trailColor = Color.LightBlue * trailAlpha * (1f - Projectile.alpha / 255f);
-
-                    Texture2D texture = ModContent.Request<Texture2D>(Texture).Value;
-                    Vector2 origin = new Vector2(texture.Width / 2f, texture.Height / 2f);
-
-                    Main.EntitySpriteDraw(
-                        texture,
-                        drawPosition,
-                        null,
-                        trailColor,
-                        Projectile.rotation,
-                        origin,
-                        trailScale,
-                        SpriteEffects.None,
-                        0
-                    );
-                }
-            }
-
             Texture2D mainTexture = ModContent.Request<Texture2D>(Texture).Value;
             Vector2 mainDrawPosition = Projectile.Center - Main.screenPosition;
             Vector2 mainOrigin = new Vector2(mainTexture.Width / 2f, mainTexture.Height / 2f);

@@ -2,33 +2,25 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using VampariaSurvivors.Content.Items;
 
 namespace VampariaSurvivors.Content.Projectile
 {
     public class WhipControllerProjectile : ModProjectile
     {
-        public int level = 1;
         private int manaTimer = 0;
         private int shootTimer = 0;
         private float ManaCost = 10f;
-
-        private int shootCooldown = 60;
-        private int projectileCount = 2;
-        private int projectilePenetration = 1;
-        private int damage = 20;
-
-        private int burstDelay = 6;
         private int burstCooldown = 0;
-
         private int burstShotCount = 0;
+
+        // Weapon stats - populated from the weapon item
+        private WeaponStats weaponStats;
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -36,27 +28,22 @@ namespace VampariaSurvivors.Content.Projectile
             {
                 ManaCost = Main.player[Projectile.owner].GetManaCost(itemUse.Item) / 2;
 
-                if (itemUse.Item.type == ModContent.ItemType<Content.Items.WhipLvl1>()) level = 1;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.WhipLvl2>()) level = 2;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.WhipLvl3>()) level = 3;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.WhipLvl4>()) level = 4;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.WhipLvl5>()) level = 5;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.WhipLvl6>()) level = 6;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.WhipLvl7>()) level = 7;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.WhipLvl8>()) level = 8;
+                if (itemUse.Item.ModItem is VSWeapon weapon)
+                {
+                    weaponStats = weapon.GetWeaponStats();
+                }
+                else
+                {
+                    weaponStats = new WeaponStats
+                    {
+                        Damage = 20,
+                        Amount = 1,
+                        Area = 1.0f,
+                        Cooldown = 60,
+                        ProjectileInterval = 6
+                    };
+                }
             }
-
-            damage = 20;
-            projectileCount = 1;
-            float areaMultiplier = 1f;
-
-            if (level >= 2) projectileCount = 2;
-            if (level >= 3) damage += 10;
-            if (level >= 4) { areaMultiplier += 0.1f; damage += 10; }
-            if (level >= 5) damage += 10;
-            if (level >= 6) { areaMultiplier += 0.1f; damage += 10; }
-            if (level >= 7) damage += 10;
-            if (level >= 8) { damage += 10; projectileCount = 3; }
         }
 
         public override void SetDefaults()
@@ -93,7 +80,7 @@ namespace VampariaSurvivors.Content.Projectile
             }
 
             shootTimer++;
-            if (shootTimer >= shootCooldown)
+            if (shootTimer >= weaponStats.Cooldown)
             {
                 burstCooldown = 0;
                 burstShotCount = 0;
@@ -101,47 +88,19 @@ namespace VampariaSurvivors.Content.Projectile
             }
 
             burstCooldown++;
-            if (burstCooldown >= burstDelay && burstShotCount < projectileCount)
+            if (burstCooldown >= weaponStats.ProjectileInterval && burstShotCount < weaponStats.Amount)
             {
-                NPC target = FindNearestEnemy(Projectile.Center, 800f);
-                if (target != null)
-                {
-                    ShootAtTarget(player, target);
-                }
+                CreateWhipSlash(player);
                 burstCooldown = 0;
                 burstShotCount++;
             }
         }
 
-        private NPC FindNearestEnemy(Vector2 position, float maxRange)
-        {
-            NPC closest = null;
-            float closestDistance = maxRange;
-
-            for (int i = 0; i < Main.maxNPCs; i++)
-            {
-                NPC npc = Main.npc[i];
-                if (npc.active && !npc.friendly && !npc.dontTakeDamage && npc.lifeMax > 5)
-                {
-                    float distance = Vector2.Distance(npc.Center, position);
-                    if (distance < closestDistance)
-                    {
-                        closest = npc;
-                        closestDistance = distance;
-                    }
-                }
-            }
-
-            return closest;
-        }
-
-
-        private void ShootAtTarget(Player player, NPC target = null)
+        private void CreateWhipSlash(Player player)
         {
             int direction = (burstShotCount % 2 == 0) ? player.direction : -player.direction;
 
             float verticalOffset = -burstShotCount * 15f;
-
             Vector2 slashStart = player.Center + new Vector2(0, verticalOffset);
 
             int projectileType = ModContent.ProjectileType<WhipProjectile>();
@@ -151,21 +110,21 @@ namespace VampariaSurvivors.Content.Projectile
                 slashStart,
                 Vector2.Zero,
                 projectileType,
-                damage,
-                2f,
+                weaponStats.Damage,
+                weaponStats.Knockback,
                 player.whoAmI,
-                ai0: level,
+                ai0: weaponStats.Area,
                 ai1: direction
             );
         }
     }
+
     public class WhipProjectile : ModProjectile
     {
-        private int level;
         private float areaMultiplier = 1f;
         private float maxWidth = 128f;
         private float maxHeight = 32f;
-        private int growthTime = 6; 
+        private int growthTime = 6;
         private float finalVerticalSpeed = 0.25f;
 
         private Vector2 originalSpawnPos;
@@ -188,11 +147,8 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override void OnSpawn(IEntitySource source)
         {
-            level = (int)Projectile.ai[0];
-
-            if (level >= 4) areaMultiplier += 0.1f;
-            if (level >= 6) areaMultiplier += 0.1f;
-
+            areaMultiplier = Projectile.ai[0];
+            
             maxWidth *= areaMultiplier;
             maxHeight *= areaMultiplier;
 
@@ -210,9 +166,9 @@ namespace VampariaSurvivors.Content.Projectile
                 hasSetSpawnPos = true;
             }
 
-            if (Projectile.timeLeft > 60 - growthTime)
+            if (Projectile.timeLeft > 30 - growthTime)
             {
-                float growthProgress = (60 - Projectile.timeLeft) / (float)growthTime;
+                float growthProgress = (30 - Projectile.timeLeft) / (float)growthTime;
 
                 Projectile.width = (int)(maxWidth * growthProgress);
                 Projectile.height = (int)(maxHeight * growthProgress);

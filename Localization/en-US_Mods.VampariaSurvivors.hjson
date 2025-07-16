@@ -375,6 +375,41 @@ Items: {
 		DisplayName: Axe Lvl8
 		Tooltip: ""
 	}
+
+	EmptyTomeLvl1: {
+		DisplayName: Empty Tome Lvl1
+		Tooltip: ""
+	}
+
+	EmptyTomeLvl2: {
+		DisplayName: Empty Tome Lvl2
+		Tooltip: ""
+	}
+
+	EmptyTomeLvl3: {
+		DisplayName: Empty Tome Lvl3
+		Tooltip: ""
+	}
+
+	EmptyTomeLvl4: {
+		DisplayName: Empty Tome Lvl4
+		Tooltip: ""
+	}
+
+	EmptyTomeLvl5: {
+		DisplayName: Empty Tome Lvl5
+		Tooltip: ""
+	}
+
+	DuplicatorLvl1: {
+		DisplayName: Duplicator Lvl1
+		Tooltip: ""
+	}
+
+	DuplicatorLvl2: {
+		DisplayName: Duplicator Lvl2
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
