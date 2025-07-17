@@ -130,6 +130,10 @@ namespace VampariaSurvivors.Content.Projectile
         private Vector2 originalSpawnPos;
         private bool hasSetSpawnPos = false;
 
+        private float areaScale = 1.0f;
+        private int baseWidth = 16;
+        private int baseHeight = 16;
+
         public override void SetDefaults()
         {
             Projectile.width = 1;
@@ -148,7 +152,7 @@ namespace VampariaSurvivors.Content.Projectile
         public override void OnSpawn(IEntitySource source)
         {
             areaMultiplier = Projectile.ai[0];
-            
+
             maxWidth *= areaMultiplier;
             maxHeight *= areaMultiplier;
 

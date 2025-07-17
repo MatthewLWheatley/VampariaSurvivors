@@ -18,6 +18,7 @@ namespace VampariaSurvivors.Content.Items
         public override int BasePierce { get; set; } = 1;
         public override int BaseCooldown { get; set; } = 60;
         public override int BaseProjectileInterval { get; set; } = 6;
+        public override float BaseSpeed { get; set; } = 12f;
 
         protected override int GetAmountBonus()
         {

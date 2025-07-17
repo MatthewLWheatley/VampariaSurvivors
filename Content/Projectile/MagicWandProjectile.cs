@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿// Example: Updated MagicWandProjectile.cs with area scaling
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
 using Terraria.Audio;
@@ -36,6 +38,7 @@ namespace VampariaSurvivors.Content.Projectile
                         Damage = 20,
                         Amount = 2,
                         Pierce = 1,
+                        Area = 1.0f,
                         Cooldown = 60,
                         ProjectileInterval = 6
                     };
@@ -136,7 +139,8 @@ namespace VampariaSurvivors.Content.Projectile
                 weaponStats.Knockback,
                 player.whoAmI,
                 ai0: weaponStats.Pierce,
-                ai1: weaponStats.Duration
+                ai1: weaponStats.Duration,
+                ai2: weaponStats.Area
             );
         }
     }
@@ -146,11 +150,14 @@ namespace VampariaSurvivors.Content.Projectile
         private int penetrationsLeft;
         private int maxTrailLength = 6;
         private float homingStrength = 0.05f;
+        private float areaScale = 1.0f;
+        private int baseWidth = 16;
+        private int baseHeight = 16;
 
         public override void SetDefaults()
         {
-            Projectile.width = 8;
-            Projectile.height = 8;
+            Projectile.width = baseWidth;
+            Projectile.height = baseHeight;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
             Projectile.timeLeft = 300;
@@ -164,6 +171,12 @@ namespace VampariaSurvivors.Content.Projectile
         {
             penetrationsLeft = (int)Projectile.ai[0];
             if (penetrationsLeft <= 0) penetrationsLeft = 1;
+
+            areaScale = Projectile.ai[2];
+            if (areaScale <= 0) areaScale = 1.0f;
+
+            Projectile.width = (int)(baseWidth * areaScale);
+            Projectile.height = (int)(baseHeight * areaScale);
         }
 
         public override void AI()
@@ -172,12 +185,10 @@ namespace VampariaSurvivors.Content.Projectile
             if (target != null)
             {
                 Vector2 directionToTarget = Vector2.Normalize(target.Center - Projectile.Center);
-
                 Projectile.velocity = Vector2.Lerp(Projectile.velocity, directionToTarget * Projectile.velocity.Length(), homingStrength);
             }
 
             Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
-
 
             if (Projectile.timeLeft < 30)
             {
@@ -225,13 +236,10 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-
             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
-
             return true;
         }
 
-        // fucking ew, but it works
         public override bool PreDraw(ref Color lightColor)
         {
             Texture2D mainTexture = ModContent.Request<Texture2D>(Texture).Value;
@@ -245,7 +253,7 @@ namespace VampariaSurvivors.Content.Projectile
                 Color.LightBlue * (1f - Projectile.alpha / 255f),
                 Projectile.rotation,
                 mainOrigin,
-                1f,
+                areaScale,
                 SpriteEffects.None,
                 0
             );

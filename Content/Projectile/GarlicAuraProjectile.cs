@@ -109,11 +109,6 @@ namespace VampariaSurvivors.Content.Projectile
                             int damage = weaponStats.Damage;
                             npc.StrikeNPC(npc.CalculateHitInfo(damage, 0, false, 0));
 
-                            if (Main.netMode != NetmodeID.Server)
-                            {
-                                Main.NewText($"Garlic hit NPC {npc.whoAmI} for {damage} damage");
-                            }
-
                             enemyCooldowns[uniqueKey] = weaponStats.ProjectileInterval;
                         }
                     }

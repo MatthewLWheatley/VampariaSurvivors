@@ -104,7 +104,8 @@ namespace VampariaSurvivors.Content.Projectile
                     weaponStats.Damage,
                     weaponStats.Knockback,
                     player.whoAmI,
-                    ai0: weaponStats.Duration
+                    ai0: weaponStats.Duration,
+                    ai1: weaponStats.Area
                 );
             }
         }
@@ -115,6 +116,10 @@ namespace VampariaSurvivors.Content.Projectile
         private List<Vector2> trailPositions = new List<Vector2>();
         private int maxTrailLength = 80;
         private Color runeColor;
+
+        private float areaScale = 1.0f;
+        private int baseWidth = 16;
+        private int baseHeight = 16;
 
         public override void SetDefaults()
         {
@@ -137,6 +142,13 @@ namespace VampariaSurvivors.Content.Projectile
             int green = Main.rand.Next(0, 256);
             int blue = Main.rand.Next(0, 256);
             runeColor = new Color(red, green, blue);
+
+
+            areaScale = Projectile.ai[1];
+            if (areaScale <= 0) areaScale = 1.0f;
+
+            Projectile.width = (int) (baseWidth* areaScale);
+            Projectile.height = (int) (baseHeight* areaScale);
         }
 
         public override void AI()
@@ -234,7 +246,7 @@ namespace VampariaSurvivors.Content.Projectile
                 Color.LightBlue * (1f - Projectile.alpha / 255f),
                 Projectile.rotation,
                 mainOrigin,
-                1f,
+                areaScale,
                 SpriteEffects.None,
                 0
             );

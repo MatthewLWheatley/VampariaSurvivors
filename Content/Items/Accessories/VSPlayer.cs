@@ -13,11 +13,17 @@ namespace VampariaSurvivors.Content.Accessories
         public float SpeedMultiplier = 1.0f;
         public int AmountBonus = 0;
         public int DurationBonus = 0;
+        public float DurationMultiplier = 1.0f;
         public int PierceBonus = 0;
         public float CooldownMultiplier = 1.0f;
         public float KnockbackMultiplier = 1.0f;
         public float ChanceBonus = 0.0f;
         public float CritMultiBonus = 0.0f;
+        public int RecoveryBonus = 0;
+        public int MaxHealthBonus = 0;
+
+        private int recoveryTimer = 0;
+        private const int RecoveryInterval = 60;
 
         public override void ResetEffects()
         {
@@ -26,11 +32,51 @@ namespace VampariaSurvivors.Content.Accessories
             SpeedMultiplier = 1.0f;
             AmountBonus = 0;
             DurationBonus = 0;
+            DurationMultiplier = 1.0f;
             PierceBonus = 0;
             CooldownMultiplier = 1.0f;
             KnockbackMultiplier = 1.0f;
             ChanceBonus = 0.0f;
             CritMultiBonus = 0.0f;
+            RecoveryBonus = 0;
+            MaxHealthBonus = 0;
+        }
+
+        public override void PostUpdateEquips()
+        {
+            if (MaxHealthBonus > 0)
+            {
+                Player.statLifeMax2 += MaxHealthBonus;
+            }
+
+            if (RecoveryBonus > 0)
+            {
+                recoveryTimer++;
+                if (recoveryTimer >= RecoveryInterval)
+                {
+                    int healAmount = RecoveryBonus;
+
+                    if (Player.statLife < Player.statLifeMax)
+                    {
+                        Player.statLife += healAmount;
+                        if (Player.statLife > Player.statLifeMax)
+                        {
+                            Player.statLife = Player.statLifeMax;
+                        }
+
+                        if (Main.netMode != NetmodeID.Server)
+                        {
+                            CombatText.NewText(Player.getRect(), CombatText.HealLife, healAmount);
+                        }
+                    }
+
+                    recoveryTimer = 0;
+                }
+            }
+            else
+            {
+                recoveryTimer = 0;
+            }
         }
 
         public WeaponStats ModifyWeaponStats(WeaponStats baseStats)
@@ -41,7 +87,7 @@ namespace VampariaSurvivors.Content.Accessories
                 Area = baseStats.Area * AreaMultiplier,
                 Speed = baseStats.Speed * SpeedMultiplier,
                 Amount = baseStats.Amount + AmountBonus,
-                Duration = baseStats.Duration + DurationBonus,
+                Duration = (int)((baseStats.Duration + DurationBonus) * DurationMultiplier),
                 Pierce = baseStats.Pierce + PierceBonus,
                 Cooldown = (int)(baseStats.Cooldown * CooldownMultiplier),
                 ProjectileInterval = baseStats.ProjectileInterval,
@@ -51,11 +97,6 @@ namespace VampariaSurvivors.Content.Accessories
                 CritMulti = baseStats.CritMulti + CritMultiBonus,
                 BlockedByWalls = baseStats.BlockedByWalls
             };
-
-            if (Main.netMode != NetmodeID.Server && CooldownMultiplier != 1.0f)
-            {
-                Main.NewText($"Cooldown modified: {baseStats.Cooldown} -> {modifiedStats.Cooldown} (multiplier: {CooldownMultiplier:F2})");
-            }
 
             return modifiedStats;
         }

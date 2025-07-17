@@ -139,7 +139,8 @@ namespace VampariaSurvivors.Content.Projectile
                 weaponStats.Damage,
                 weaponStats.Knockback,
                 player.whoAmI,
-                ai0: weaponStats.Duration
+                ai0: weaponStats.Duration,
+                ai1: weaponStats.Area
             );
         }
     }
@@ -150,6 +151,11 @@ namespace VampariaSurvivors.Content.Projectile
         private float homingStrength = 1.0f;
         private int duration = 10;
         private int timeAlive = 0;
+
+        private float areaScale = 1.0f;
+        private int baseWidth = 16;
+        private int baseHeight = 16;
+
 
         private NPC LastHitNPC = null;
 
@@ -169,6 +175,13 @@ namespace VampariaSurvivors.Content.Projectile
         public override void OnSpawn(IEntitySource source)
         {
             duration = (int)Projectile.ai[0];
+
+
+            areaScale = Projectile.ai[1];
+            if (areaScale <= 0) areaScale = 1.0f;
+
+            Projectile.width = (int) (baseWidth* areaScale);
+            Projectile.height = (int) (baseHeight* areaScale);
         }
 
         public override void AI()
@@ -249,7 +262,7 @@ namespace VampariaSurvivors.Content.Projectile
                 Color.LightBlue * (1f - Projectile.alpha / 255f),
                 Projectile.rotation,
                 mainOrigin,
-                1f,
+                areaScale,
                 SpriteEffects.None,
                 0
             );

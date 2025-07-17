@@ -141,7 +141,8 @@ namespace VampariaSurvivors.Content.Projectile
                     weaponStats.Damage,
                     weaponStats.Knockback,
                     player.whoAmI,
-                    ai0: weaponStats.Pierce
+                    ai0: weaponStats.Pierce,
+                    ai1: weaponStats.Area
                 );
             }
         }
@@ -153,6 +154,10 @@ namespace VampariaSurvivors.Content.Projectile
         private List<Vector2> trailPositions = new List<Vector2>();
         private int maxTrailLength = 12;
         private float homingStrength = 0.00f;
+
+        private float areaScale = 1.0f;
+        private int baseWidth = 16;
+        private int baseHeight = 16;
 
         public override void SetDefaults()
         {
@@ -171,6 +176,11 @@ namespace VampariaSurvivors.Content.Projectile
         {
             penetrationsLeft = (int)Projectile.ai[0];
             if (penetrationsLeft <= 0) penetrationsLeft = 1;
+            areaScale = Projectile.ai[1];
+            if (areaScale <= 0) areaScale = 1.0f;
+
+            Projectile.width = (int) (baseWidth* areaScale);
+            Projectile.height = (int) (baseHeight* areaScale);
         }
 
         public override void AI()
@@ -278,7 +288,7 @@ namespace VampariaSurvivors.Content.Projectile
                 Color.OrangeRed * (1f - Projectile.alpha / 255f),
                 Projectile.rotation - MathHelper.ToRadians(45f),
                 mainOrigin,
-                1f,
+                areaScale,
                 SpriteEffects.None,
                 0
             );

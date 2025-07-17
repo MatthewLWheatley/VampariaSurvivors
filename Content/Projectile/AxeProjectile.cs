@@ -21,6 +21,8 @@ namespace VampariaSurvivors.Content.Projectile
 
         private WeaponStats weaponStats;
 
+
+
         public override void OnSpawn(IEntitySource source)
         {
             if (source is EntitySource_ItemUse itemUse)
@@ -128,7 +130,8 @@ namespace VampariaSurvivors.Content.Projectile
                 weaponStats.Damage,
                 weaponStats.Knockback,
                 player.whoAmI,
-                ai0: weaponStats.Pierce
+                ai0: weaponStats.Pierce,
+                ai1: weaponStats.Area
             );
         }
     }
@@ -136,6 +139,9 @@ namespace VampariaSurvivors.Content.Projectile
     public class AxeProjectile : ModProjectile
     {
         private int penetrationsLeft;
+        private float areaScale = 1.0f;
+        private int baseWidth = 16;
+        private int baseHeight = 16;
 
         public override void SetDefaults()
         {
@@ -143,9 +149,9 @@ namespace VampariaSurvivors.Content.Projectile
             Projectile.height = 16;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
-            Projectile.timeLeft = 300;
+            Projectile.timeLeft = 150;
             Projectile.ignoreWater = true;
-            Projectile.tileCollide = true;
+            Projectile.tileCollide = false;
             Projectile.light = 0.3f;
             Projectile.penetrate = 100;
         }
@@ -154,6 +160,11 @@ namespace VampariaSurvivors.Content.Projectile
         {
             penetrationsLeft = (int)Projectile.ai[0];
             if (penetrationsLeft <= 0) penetrationsLeft = 3;
+            areaScale = Projectile.ai[1];
+            if (areaScale <= 0) areaScale = 1.0f;
+
+            Projectile.width = (int)(baseWidth * areaScale);
+            Projectile.height = (int)(baseHeight * areaScale);
         }
 
         public override void AI()
@@ -193,7 +204,7 @@ namespace VampariaSurvivors.Content.Projectile
 
             Main.EntitySpriteDraw(mainTexture, mainDrawPosition, null,
                                 Color.White * (1f - Projectile.alpha / 255f),
-                                Projectile.rotation, mainOrigin, 1f,
+                                Projectile.rotation, mainOrigin, areaScale,
                                 SpriteEffects.None, 0);
 
             return false;

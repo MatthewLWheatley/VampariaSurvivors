@@ -128,10 +128,7 @@ namespace VampariaSurvivors.Content.Projectile
                     break;
             }
 
-            
-            float shootSpeed = 12f * weaponStats.Speed;
-            Main.NewText(shootSpeed);
-            Vector2 velocity = shootDirection * shootSpeed;
+            Vector2 velocity = shootDirection * weaponStats.Speed;
 
             int projectileType = ModContent.ProjectileType<KnifeProjectile>();
 
@@ -143,7 +140,8 @@ namespace VampariaSurvivors.Content.Projectile
                 weaponStats.Damage,
                 weaponStats.Knockback,
                 player.whoAmI,
-                ai0: weaponStats.Pierce
+                ai0: weaponStats.Pierce,
+                ai1: weaponStats.Area
             );
         }
     }
@@ -155,6 +153,9 @@ namespace VampariaSurvivors.Content.Projectile
         private int maxTrailLength = 0;
         private float homingStrength = 0.00f;
 
+        private float areaScale = 1.0f;
+        private int baseWidth = 16;
+        private int baseHeight = 16;
         public override void SetDefaults()
         {
             Projectile.width = 8;
@@ -172,6 +173,13 @@ namespace VampariaSurvivors.Content.Projectile
         {
             penetrationsLeft = (int)Projectile.ai[0];
             if (penetrationsLeft <= 0) penetrationsLeft = 1;
+
+
+            areaScale = Projectile.ai[1];
+            if (areaScale <= 0) areaScale = 1.0f;
+
+            Projectile.width = (int)(baseWidth * areaScale);
+            Projectile.height = (int)(baseHeight * areaScale);
         }
 
         public override void AI()
@@ -243,8 +251,9 @@ namespace VampariaSurvivors.Content.Projectile
         {
             SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
             return true;
+            
         }
-
+        
         public override bool PreDraw(ref Color lightColor)
         {
             if (trailPositions.Count > 1 && maxTrailLength > 0)
@@ -288,7 +297,7 @@ namespace VampariaSurvivors.Content.Projectile
                 Color.LightBlue * (1f - Projectile.alpha / 255f),
                 Projectile.velocity.ToRotation(),
                 mainOrigin,
-                1f,
+                areaScale,
                 SpriteEffects.None,
                 0
             );

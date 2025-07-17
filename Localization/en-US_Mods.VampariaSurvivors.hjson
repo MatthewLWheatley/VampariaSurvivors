@@ -410,6 +410,156 @@ Items: {
 		DisplayName: Duplicator Lvl2
 		Tooltip: ""
 	}
+
+	SpinachLvl1: {
+		DisplayName: Spinach Lvl1
+		Tooltip: ""
+	}
+
+	SpinachLvl2: {
+		DisplayName: Spinach Lvl2
+		Tooltip: ""
+	}
+
+	SpinachLvl3: {
+		DisplayName: Spinach Lvl3
+		Tooltip: ""
+	}
+
+	SpinachLvl4: {
+		DisplayName: Spinach Lvl4
+		Tooltip: ""
+	}
+
+	SpinachLvl5: {
+		DisplayName: Spinach Lvl5
+		Tooltip: ""
+	}
+
+	CandelabradorLvl1: {
+		DisplayName: Candelabrador Lvl1
+		Tooltip: ""
+	}
+
+	CandelabradorLvl2: {
+		DisplayName: Candelabrador Lvl2
+		Tooltip: ""
+	}
+
+	CandelabradorLvl3: {
+		DisplayName: Candelabrador Lvl3
+		Tooltip: ""
+	}
+
+	CandelabradorLvl4: {
+		DisplayName: Candelabrador Lvl4
+		Tooltip: ""
+	}
+
+	CandelabradorLvl5: {
+		DisplayName: Candelabrador Lvl5
+		Tooltip: ""
+	}
+
+	BracerLvl1: {
+		DisplayName: Bracer Lvl1
+		Tooltip: ""
+	}
+
+	BracerLvl2: {
+		DisplayName: Bracer Lvl2
+		Tooltip: ""
+	}
+
+	BracerLvl3: {
+		DisplayName: Bracer Lvl3
+		Tooltip: ""
+	}
+
+	BracerLvl4: {
+		DisplayName: Bracer Lvl4
+		Tooltip: ""
+	}
+
+	BracerLvl5: {
+		DisplayName: Bracer Lvl5
+		Tooltip: ""
+	}
+
+	PummarolaLvl1: {
+		DisplayName: Pummarola Lvl1
+		Tooltip: ""
+	}
+
+	PummarolaLvl2: {
+		DisplayName: Pummarola Lvl2
+		Tooltip: ""
+	}
+
+	PummarolaLvl3: {
+		DisplayName: Pummarola Lvl3
+		Tooltip: ""
+	}
+
+	PummarolaLvl4: {
+		DisplayName: Pummarola Lvl4
+		Tooltip: ""
+	}
+
+	PummarolaLvl5: {
+		DisplayName: Pummarola Lvl5
+		Tooltip: ""
+	}
+
+	HollowHeartLvl1: {
+		DisplayName: Hollow Heart Lvl1
+		Tooltip: ""
+	}
+
+	HollowHeartLvl2: {
+		DisplayName: Hollow Heart Lvl2
+		Tooltip: ""
+	}
+
+	HollowHeartLvl3: {
+		DisplayName: Hollow Heart Lvl3
+		Tooltip: ""
+	}
+
+	HollowHeartLvl4: {
+		DisplayName: Hollow Heart Lvl4
+		Tooltip: ""
+	}
+
+	HollowHeartLvl5: {
+		DisplayName: Hollow Heart Lvl5
+		Tooltip: ""
+	}
+
+	SpellbinderLvl1: {
+		DisplayName: Spellbinder Lvl1
+		Tooltip: ""
+	}
+
+	SpellbinderLvl2: {
+		DisplayName: Spellbinder Lvl2
+		Tooltip: ""
+	}
+
+	SpellbinderLvl3: {
+		DisplayName: Spellbinder Lvl3
+		Tooltip: ""
+	}
+
+	SpellbinderLvl4: {
+		DisplayName: Spellbinder Lvl4
+		Tooltip: ""
+	}
+
+	SpellbinderLvl5: {
+		DisplayName: Spellbinder Lvl5
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
