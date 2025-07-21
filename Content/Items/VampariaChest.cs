@@ -37,6 +37,7 @@ namespace VampariaSurvivors.Content.Items
                 (ModContent.ItemType<BoneLvl1>(), 80),
                 (ModContent.ItemType<KnifeLvl1>(), 80),
                 (ModContent.ItemType<WhipLvl1>(), 60),
+                (ModContent.ItemType<CrossLvl1>(), 70)
                 //add other weapons
             };
 

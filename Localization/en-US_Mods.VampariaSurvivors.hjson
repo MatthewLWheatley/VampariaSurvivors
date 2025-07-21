@@ -560,6 +560,126 @@ Items: {
 		DisplayName: Spellbinder Lvl5
 		Tooltip: ""
 	}
+
+	CrossLvl1: {
+		DisplayName: Cross Lvl1
+		Tooltip: ""
+	}
+
+	CrossLvl2: {
+		DisplayName: Cross Lvl2
+		Tooltip: ""
+	}
+
+	CrossLvl3: {
+		DisplayName: Cross Lvl3
+		Tooltip: ""
+	}
+
+	CrossLvl4: {
+		DisplayName: Cross Lvl4
+		Tooltip: ""
+	}
+
+	CrossLvl5: {
+		DisplayName: Cross Lvl5
+		Tooltip: ""
+	}
+
+	CrossLvl6: {
+		DisplayName: Cross Lvl6
+		Tooltip: ""
+	}
+
+	CrossLvl7: {
+		DisplayName: Cross Lvl7
+		Tooltip: ""
+	}
+
+	CrossLvl8: {
+		DisplayName: Cross Lvl8
+		Tooltip: ""
+	}
+
+	KingBibleLvl1: {
+		DisplayName: King Bible Lvl1
+		Tooltip: ""
+	}
+
+	KingBibleLvl2: {
+		DisplayName: King Bible Lvl2
+		Tooltip: ""
+	}
+
+	KingBibleLvl3: {
+		DisplayName: King Bible Lvl3
+		Tooltip: ""
+	}
+
+	KingBibleLvl4: {
+		DisplayName: King Bible Lvl4
+		Tooltip: ""
+	}
+
+	KingBibleLvl5: {
+		DisplayName: King Bible Lvl5
+		Tooltip: ""
+	}
+
+	KingBibleLvl6: {
+		DisplayName: King Bible Lvl6
+		Tooltip: ""
+	}
+
+	KingBibleLvl7: {
+		DisplayName: King Bible Lvl7
+		Tooltip: ""
+	}
+
+	KingBibleLvl8: {
+		DisplayName: King Bible Lvl8
+		Tooltip: ""
+	}
+
+	SantaWaterLvl1: {
+		DisplayName: Santa Water Lvl1
+		Tooltip: ""
+	}
+
+	SantaWaterLvl2: {
+		DisplayName: Santa Water Lvl2
+		Tooltip: ""
+	}
+
+	SantaWaterLvl3: {
+		DisplayName: Santa Water Lvl3
+		Tooltip: ""
+	}
+
+	SantaWaterLvl4: {
+		DisplayName: Santa Water Lvl4
+		Tooltip: ""
+	}
+
+	SantaWaterLvl5: {
+		DisplayName: Santa Water Lvl5
+		Tooltip: ""
+	}
+
+	SantaWaterLvl6: {
+		DisplayName: Santa Water Lvl6
+		Tooltip: ""
+	}
+
+	SantaWaterLvl7: {
+		DisplayName: Santa Water Lvl7
+		Tooltip: ""
+	}
+
+	SantaWaterLvl8: {
+		DisplayName: Santa Water Lvl8
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -581,4 +701,11 @@ Projectiles: {
 	WhipProjectile.DisplayName: Whip Projectile
 	AxeControllerProjectile.DisplayName: Axe Controller Projectile
 	AxeProjectile.DisplayName: Axe Projectile
+	CrossControllerProjectile.DisplayName: Cross Controller Projectile
+	CrossProjectile.DisplayName: Cross Projectile
+	KingBibleControllerProjectile.DisplayName: King Bible Controller Projectile
+	KingBibleProjectile.DisplayName: King Bible Projectile
+	SantaWaterBottleProjectile.DisplayName: Santa Water Bottle Projectile
+	SantaWaterControllerProjectile.DisplayName: Santa Water Controller Projectile
+	SantaWaterPuddleProjectile.DisplayName: Santa Water Puddle Projectile
 }
