@@ -2,36 +2,24 @@
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.ModLoader;
+using VampariaSurvivors.Content.Items;
 
 namespace VampariaSurvivors.Content.Projectile
 {
-    public class boneControllerProjectile : ModProjectile
+    public class BoneControllerProjectile : ModProjectile
     {
-        public int level = 1;
         private int manaTimer = 0;
         private int shootTimer = 0;
         private float ManaCost = 10f;
-
-        private int shootCooldown = 180;
-        private int projectileCount = 1;
-        private int projectilePenetration = 1;
-        private int damage = 10;
-
-        private int burstDelay = 6;
         private int burstCooldown = 0;
-
         private int burstShotCount = 0;
 
-        private int duration = 120;
-        private float speed = 12f;
+        private WeaponStats weaponStats;
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -39,28 +27,23 @@ namespace VampariaSurvivors.Content.Projectile
             {
                 ManaCost = Main.player[Projectile.owner].GetManaCost(itemUse.Item) / 2;
 
-                if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl1>()) level = 1;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl2>()) level = 2;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl3>()) level = 3;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl4>()) level = 4;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl5>()) level = 5;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl6>()) level = 6;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl7>()) level = 7;
-                else if (itemUse.Item.type == ModContent.ItemType<Content.Items.boneLvl8>()) level = 8;
+                if (itemUse.Item.ModItem is VSWeapon weapon)
+                {
+                    weaponStats = weapon.GetWeaponStats();
+                }
+                else
+                {
+                    weaponStats = new WeaponStats
+                    {
+                        Damage = 20,
+                        Amount = 1,
+                        Duration = 120,
+                        Speed = 12f,
+                        Cooldown = 180,
+                        ProjectileInterval = 6
+                    };
+                }
             }
-
-            damage = (int)(damage * (1 + 0.25f * (level - 1)));
-
-            if (level >= 2) duration += 16;
-            if (level >= 3) projectileCount += 1;
-            if (level >= 3) damage += 20;
-            if (level >= 4) speed *= 1.5f;
-            if (level >= 5) projectileCount += 1;
-            if (level >= 5) damage += 20;
-            if (level >= 6) duration += 16;
-            if (level >= 7) damage += 20;
-            if (level >= 8) duration += 16;
-            if (level >= 8) speed *= 1.5f;
         }
 
         public override void SetDefaults()
@@ -97,7 +80,7 @@ namespace VampariaSurvivors.Content.Projectile
             }
 
             shootTimer++;
-            if (shootTimer >= shootCooldown)
+            if (shootTimer >= weaponStats.Cooldown)
             {
                 burstCooldown = 0;
                 burstShotCount = 0;
@@ -105,7 +88,7 @@ namespace VampariaSurvivors.Content.Projectile
             }
 
             burstCooldown++;
-            if (burstCooldown >= burstDelay && burstShotCount < projectileCount)
+            if (burstCooldown >= weaponStats.ProjectileInterval && burstShotCount < weaponStats.Amount)
             {
                 NPC target = FindNearestEnemy(Projectile.Center, 800f);
                 if (target != null)
@@ -143,32 +126,39 @@ namespace VampariaSurvivors.Content.Projectile
         {
             Vector2 shootDirection = Vector2.Normalize(target.Center - player.Center);
 
-            float shootSpeed = 12f;
+            float shootSpeed = weaponStats.Speed;
             Vector2 velocity = shootDirection * shootSpeed;
 
-            int projectileType = ModContent.ProjectileType<boneProjectile>();
+            int projectileType = ModContent.ProjectileType<BoneProjectile>();
 
             Terraria.Projectile.NewProjectile(
                 Projectile.GetSource_FromThis(),
                 player.Center,
                 velocity,
                 projectileType,
-                damage,
-                2f,
+                weaponStats.Damage,
+                weaponStats.Knockback,
                 player.whoAmI,
-                ai0: duration
+                ai0: weaponStats.Duration,
+                ai1: weaponStats.Area
             );
-
         }
     }
-    public class boneProjectile : ModProjectile
+
+    public class BoneProjectile : ModProjectile
     {
         private int penetrationsLeft;
         private float homingStrength = 1.0f;
         private int duration = 10;
-        private int timeLeft = 0;
+        private int timeAlive = 0;
+
+        private float areaScale = 1.0f;
+        private int baseWidth = 16;
+        private int baseHeight = 16;
+
 
         private NPC LastHitNPC = null;
+
         public override void SetDefaults()
         {
             Projectile.width = 8;
@@ -185,18 +175,25 @@ namespace VampariaSurvivors.Content.Projectile
         public override void OnSpawn(IEntitySource source)
         {
             duration = (int)Projectile.ai[0];
+
+
+            areaScale = Projectile.ai[1];
+            if (areaScale <= 0) areaScale = 1.0f;
+
+            Projectile.width = (int) (baseWidth* areaScale);
+            Projectile.height = (int) (baseHeight* areaScale);
         }
 
         public override void AI()
         {
-            if(timeLeft > duration) 
+            if (timeAlive >= duration)
             {
                 Projectile.Kill();
                 return;
             }
-            timeLeft++;
-            Projectile.rotation += .05f;
+            timeAlive++;
 
+            Projectile.rotation += 0.05f;
         }
 
         private NPC FindNearestEnemy(Vector2 position, float maxRange)
@@ -228,10 +225,10 @@ namespace VampariaSurvivors.Content.Projectile
             LastHitNPC = target;
             SoundEngine.PlaySound(SoundID.DD2_SkeletonHurt, Projectile.position);
 
-            NPC target2 = FindNearestEnemy(Projectile.Center, 200f);
-            if (target2 != null)
+            NPC nextTarget = FindNearestEnemy(Projectile.Center, 200f);
+            if (nextTarget != null)
             {
-                Vector2 directionToTarget = Vector2.Normalize(target2.Center - Projectile.Center);
+                Vector2 directionToTarget = Vector2.Normalize(nextTarget.Center - Projectile.Center);
                 float currentSpeed = Projectile.velocity.Length();
 
                 Projectile.velocity = directionToTarget * currentSpeed;
@@ -242,11 +239,10 @@ namespace VampariaSurvivors.Content.Projectile
         {
             SoundEngine.PlaySound(SoundID.DD2_SkeletonHurt, Projectile.position);
 
-            NPC target2 = FindNearestEnemy(Projectile.Center, 200f);
-            if (target2 != null)
+            NPC target = FindNearestEnemy(Projectile.Center, 200f);
+            if (target != null)
             {
-                Vector2 directionToTarget = Vector2.Normalize(target2.Center - Projectile.Center);
-
+                Vector2 directionToTarget = Vector2.Normalize(target.Center - Projectile.Center);
                 Projectile.velocity = Vector2.Lerp(Projectile.velocity, directionToTarget * Projectile.velocity.Length(), homingStrength);
             }
 
@@ -266,7 +262,7 @@ namespace VampariaSurvivors.Content.Projectile
                 Color.LightBlue * (1f - Projectile.alpha / 255f),
                 Projectile.rotation,
                 mainOrigin,
-                1f,
+                areaScale,
                 SpriteEffects.None,
                 0
             );

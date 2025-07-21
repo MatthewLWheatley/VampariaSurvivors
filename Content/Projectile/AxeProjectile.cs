@@ -1,7 +1,7 @@
-﻿// Example: Updated MagicWandProjectile.cs with area scaling
-
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System;
+using System.Collections.Generic;
 using Terraria;
 using Terraria.Audio;
 using Terraria.DataStructures;
@@ -11,7 +11,7 @@ using VampariaSurvivors.Content.Items;
 
 namespace VampariaSurvivors.Content.Projectile
 {
-    public class MagicWandControllerProjectile : ModProjectile
+    public class AxeControllerProjectile : ModProjectile
     {
         private int manaTimer = 0;
         private int shootTimer = 0;
@@ -20,6 +20,8 @@ namespace VampariaSurvivors.Content.Projectile
         private int burstShotCount = 0;
 
         private WeaponStats weaponStats;
+
+
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -37,8 +39,7 @@ namespace VampariaSurvivors.Content.Projectile
                     {
                         Damage = 20,
                         Amount = 2,
-                        Pierce = 1,
-                        Area = 1.0f,
+                        Pierce = 3,
                         Cooldown = 60,
                         ProjectileInterval = 6
                     };
@@ -90,89 +91,76 @@ namespace VampariaSurvivors.Content.Projectile
             burstCooldown++;
             if (burstCooldown >= weaponStats.ProjectileInterval && burstShotCount < weaponStats.Amount)
             {
-                NPC target = FindNearestEnemy(Projectile.Center, 800f);
-                if (target != null)
-                {
-                    ShootAtTarget(player, target);
-                }
+                ShootAxe(player, burstShotCount);
                 burstCooldown = 0;
                 burstShotCount++;
             }
         }
 
-        private NPC FindNearestEnemy(Vector2 position, float maxRange)
+        private void ShootAxe(Player player, int axeIndex)
         {
-            NPC closest = null;
-            float closestDistance = maxRange;
+            Vector2 shootPosition = player.Center;
+            Vector2 velocity;
 
-            for (int i = 0; i < Main.maxNPCs; i++)
+            if (axeIndex == 0)
             {
-                NPC npc = Main.npc[i];
-                if (npc.active && !npc.friendly && !npc.dontTakeDamage && npc.lifeMax > 5)
-                {
-                    float distance = Vector2.Distance(npc.Center, position);
-                    if (distance < closestDistance)
-                    {
-                        closest = npc;
-                        closestDistance = distance;
-                    }
-                }
+                velocity = new Vector2(0, -8f);
+            }
+            else
+            {
+                float facingDirection = player.direction;
+                float arcAngle = axeIndex * 0.5f;
+
+                velocity = new Vector2(
+                    facingDirection * arcAngle * 3f,
+                    -8f + (arcAngle * 0.5f)
+                );
             }
 
-            return closest;
-        }
+            // Apply speed modifier from weapon stats
+            velocity *= weaponStats.Speed;
 
-        private void ShootAtTarget(Player player, NPC target)
-        {
-            Vector2 shootDirection = Vector2.Normalize(target.Center - player.Center);
-            float shootSpeed = 12f * weaponStats.Speed;
-            Vector2 velocity = shootDirection * shootSpeed;
-
-            int projectileType = ModContent.ProjectileType<MagicWandProjectile>();
+            int projectileType = ModContent.ProjectileType<AxeProjectile>();
 
             Terraria.Projectile.NewProjectile(
                 Projectile.GetSource_FromThis(),
-                player.Center,
+                shootPosition,
                 velocity,
                 projectileType,
                 weaponStats.Damage,
                 weaponStats.Knockback,
                 player.whoAmI,
                 ai0: weaponStats.Pierce,
-                ai1: weaponStats.Duration,
-                ai2: weaponStats.Area
+                ai1: weaponStats.Area
             );
         }
     }
 
-    public class MagicWandProjectile : ModProjectile
+    public class AxeProjectile : ModProjectile
     {
         private int penetrationsLeft;
-        private int maxTrailLength = 6;
-        private float homingStrength = 0.05f;
         private float areaScale = 1.0f;
         private int baseWidth = 16;
         private int baseHeight = 16;
 
         public override void SetDefaults()
         {
-            Projectile.width = baseWidth;
-            Projectile.height = baseHeight;
+            Projectile.width = 16;
+            Projectile.height = 16;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
-            Projectile.timeLeft = 300;
+            Projectile.timeLeft = 150;
             Projectile.ignoreWater = true;
-            Projectile.tileCollide = true;
-            Projectile.light = 0.5f;
+            Projectile.tileCollide = false;
+            Projectile.light = 0.3f;
             Projectile.penetrate = 100;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
             penetrationsLeft = (int)Projectile.ai[0];
-            if (penetrationsLeft <= 0) penetrationsLeft = 1;
-
-            areaScale = Projectile.ai[2];
+            if (penetrationsLeft <= 0) penetrationsLeft = 3;
+            areaScale = Projectile.ai[1];
             if (areaScale <= 0) areaScale = 1.0f;
 
             Projectile.width = (int)(baseWidth * areaScale);
@@ -181,14 +169,9 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override void AI()
         {
-            NPC target = FindNearestEnemy(Projectile.Center, 200f);
-            if (target != null)
-            {
-                Vector2 directionToTarget = Vector2.Normalize(target.Center - Projectile.Center);
-                Projectile.velocity = Vector2.Lerp(Projectile.velocity, directionToTarget * Projectile.velocity.Length(), homingStrength);
-            }
+            Projectile.velocity.Y += 0.2f;
 
-            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
+            Projectile.rotation += 0.3f;
 
             if (Projectile.timeLeft < 30)
             {
@@ -196,37 +179,9 @@ namespace VampariaSurvivors.Content.Projectile
             }
         }
 
-        private NPC FindNearestEnemy(Vector2 position, float maxRange)
-        {
-            NPC closest = null;
-            float closestDistance = maxRange;
-            Vector2 currentDirection = Vector2.Normalize(Projectile.velocity);
-
-            for (int i = 0; i < Main.maxNPCs; i++)
-            {
-                NPC npc = Main.npc[i];
-                if (npc.active && !npc.friendly && !npc.dontTakeDamage && npc.lifeMax > 5)
-                {
-                    float distance = Vector2.Distance(npc.Center, position);
-                    if (distance < closestDistance)
-                    {
-                        Vector2 directionToEnemy = Vector2.Normalize(npc.Center - position);
-                        float dotProduct = Vector2.Dot(currentDirection, directionToEnemy);
-
-                        if (dotProduct > 0.9f)
-                        {
-                            closest = npc;
-                            closestDistance = distance;
-                        }
-                    }
-                }
-            }
-
-            return closest;
-        }
-
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
+            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
             penetrationsLeft--;
             if (penetrationsLeft <= 0)
             {
@@ -242,21 +197,15 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override bool PreDraw(ref Color lightColor)
         {
+
             Texture2D mainTexture = ModContent.Request<Texture2D>(Texture).Value;
             Vector2 mainDrawPosition = Projectile.Center - Main.screenPosition;
             Vector2 mainOrigin = new Vector2(mainTexture.Width / 2f, mainTexture.Height / 2f);
 
-            Main.EntitySpriteDraw(
-                mainTexture,
-                mainDrawPosition,
-                null,
-                Color.LightBlue * (1f - Projectile.alpha / 255f),
-                Projectile.rotation,
-                mainOrigin,
-                areaScale,
-                SpriteEffects.None,
-                0
-            );
+            Main.EntitySpriteDraw(mainTexture, mainDrawPosition, null,
+                                Color.White * (1f - Projectile.alpha / 255f),
+                                Projectile.rotation, mainOrigin, areaScale,
+                                SpriteEffects.None, 0);
 
             return false;
         }

@@ -1,191 +1,103 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 using VampariaSurvivors.Content.Projectile;
 
 namespace VampariaSurvivors.Content.Items
 {
-    public class MagicWandLvl1 : ModItem
+    public class MagicWandLvl1 : VSWeapon
     {
-        public int Level = 1;
-        public override void SetDefaults()
-        {
-            Item.SetNameOverride("Magic Wand");
-            Item.width = 32;
-            Item.height = 32;
-            Item.useTime = 10;
-            Item.useAnimation = 10;
-            Item.useStyle = ItemUseStyleID.HoldUp;
-            Item.DamageType = DamageClass.Magic;
-            Item.damage = 0;
-            Item.knockBack = 1.5f;
-            Item.mana = 20;
-            Item.noMelee = true;
-            Item.autoReuse = false;
-            Item.shoot = ModContent.ProjectileType<MagicWandControllerProjectile>();
-            Item.shootSpeed = 0f;
-        }
+        public override string Texture => "VampariaSurvivors/Content/Items/MagicWand";
+        public override string WeaponName => "Magic Wand";
+        public override string WeaponDescription => "Toggleable Personal Sentry";
+        public override int ControllerProjectileType => ModContent.ProjectileType<MagicWandControllerProjectile>();
+        public override string WeaponIdentifier => "MagicWand";
 
-        public override bool CanUseItem(Player player)
+        public override int BaseDamage { get; set; } = 20;
+        public override int BaseAmount { get; set; } = 2;
+        public override int BaseCooldown { get; set; } = 60;
+        public override int BasePierce { get; set; } = 1;
+
+        protected override int GetAmountBonus()
         {
-            for (int i = 0; i < Main.maxProjectiles; i++)
+            return Level switch
             {
-                if (Main.projectile[i].active && Main.projectile[i].owner == player.whoAmI &&
-                    Main.projectile[i].type == ModContent.ProjectileType<MagicWandControllerProjectile>())
-                {
-                    Main.projectile[i].Kill();
-                    return false;
-                }
-            }
-            return true;
+                >= 6 => 2,
+                >= 4 => 1,
+                >= 2 => 0,
+                _ => 0
+            };
         }
 
-        public override void ModifyTooltips(List<TooltipLine> tooltips)
+        protected override int GetCooldownReduction()
         {
-            int damage = 20;
-            damage = (int)(damage * (1 + 0.25f * (Level - 1)));
-            int shootCooldown = 60;
-            int projectileCount = 2;
-            int projectilePenetration = 1;
-
-            if (Level >= 2) projectileCount = 2;
-            if (Level >= 3) shootCooldown = 48;
-            if (Level >= 4) projectileCount = 3;
-            if (Level >= 5) damage += 20;
-            if (Level >= 6) projectileCount = 4;
-            if (Level >= 7) projectilePenetration = 2;
-            if (Level >= 8) damage += 20;
-
-            tooltips.Clear();
-            tooltips.Add(new TooltipLine(Mod, "Name", "Magic Wand"));
-            tooltips.Add(new TooltipLine(Mod, "Level", "Level " + Level));
-            tooltips.Add(new TooltipLine(Mod, "ManaCost", "Mana Cost: " + Main.LocalPlayer.GetManaCost(Item)));
-            tooltips.Add(new TooltipLine(Mod, "Manamaintenance", "Mana Maintenance: " + Main.LocalPlayer.GetManaCost(Item) / 2));
-            tooltips.Add(new TooltipLine(Mod, "Damage", "Damage: " + damage));
-            tooltips.Add(new TooltipLine(Mod, "ProjectileCount", "Projecttile Count: " + projectileCount));
-            tooltips.Add(new TooltipLine(Mod, "ProjectilePenetration", "Projecttile Penetration: " + projectilePenetration));
-            tooltips.Add(new TooltipLine(Mod, "Cooldown", "Cooldown: " + shootCooldown / 60 + "s"));
-            tooltips.Add(new TooltipLine(Mod, "Description", "Toggleable Personal Sentry"));
-            base.ModifyTooltips(tooltips);
+            return Level >= 3 ? 12 : 0;
         }
 
+        protected override int GetPierceBonus()
+        {
+            return Level >= 7 ? 1 : 0;
+        }
+
+        protected override float GetDamageScale()
+        {
+            float baseScale = base.GetDamageScale();
+
+            if (Level >= 8) baseScale += 20.0f / BaseDamage;
+            if (Level >= 5) baseScale += 20.0f / BaseDamage;
+
+            return baseScale;
+        }
+
+        protected override int GetWeaponTypeAtLevel(int level)
+        {
+            return level switch
+            {
+                1 => ModContent.ItemType<MagicWandLvl1>(),
+                2 => ModContent.ItemType<MagicWandLvl2>(),
+                3 => ModContent.ItemType<MagicWandLvl3>(),
+                4 => ModContent.ItemType<MagicWandLvl4>(),
+                5 => ModContent.ItemType<MagicWandLvl5>(),
+                6 => ModContent.ItemType<MagicWandLvl6>(),
+                7 => ModContent.ItemType<MagicWandLvl7>(),
+                8 => ModContent.ItemType<MagicWandLvl8>(),
+                _ => level > 8 ? ModContent.ItemType<MagicWandLvl8>() : -1
+            };
+        }
     }
 
     public class MagicWandLvl2 : MagicWandLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 2;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 2;
     }
+
     public class MagicWandLvl3 : MagicWandLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 3;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl2>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 3;
     }
+
     public class MagicWandLvl4 : MagicWandLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 4;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl3>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 4;
     }
+
     public class MagicWandLvl5 : MagicWandLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 5;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl4>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 5;
     }
+
     public class MagicWandLvl6 : MagicWandLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 6;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl5>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 6;
     }
+
     public class MagicWandLvl7 : MagicWandLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 7;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl6>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 7;
     }
+
     public class MagicWandLvl8 : MagicWandLvl1
     {
-        public override void SetDefaults()
-        {
-            base.SetDefaults();
-            Level = 8;
-        }
-        public override void AddRecipes()
-        {
-            Recipe.Create(Type)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl7>(), 1)
-                .AddIngredient(ModContent.ItemType<MagicWandLvl1>(), 1)
-                .AddTile(TileID.WorkBenches)
-                .Register();
-        }
+        public override int Level { get; set; } = 8;
     }
 }
