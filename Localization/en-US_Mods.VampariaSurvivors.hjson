@@ -680,6 +680,46 @@ Items: {
 		DisplayName: Santa Water Lvl8
 		Tooltip: ""
 	}
+
+	CherryBombLvl1: {
+		DisplayName: Cherry Bomb Lvl1
+		Tooltip: ""
+	}
+
+	CherryBombLvl2: {
+		DisplayName: Cherry Bomb Lvl2
+		Tooltip: ""
+	}
+
+	CherryBombLvl3: {
+		DisplayName: Cherry Bomb Lvl3
+		Tooltip: ""
+	}
+
+	CherryBombLvl4: {
+		DisplayName: Cherry Bomb Lvl4
+		Tooltip: ""
+	}
+
+	CherryBombLvl5: {
+		DisplayName: Cherry Bomb Lvl5
+		Tooltip: ""
+	}
+
+	CherryBombLvl6: {
+		DisplayName: Cherry Bomb Lvl6
+		Tooltip: ""
+	}
+
+	CherryBombLvl7: {
+		DisplayName: Cherry Bomb Lvl7
+		Tooltip: ""
+	}
+
+	CherryBombLvl8: {
+		DisplayName: Cherry Bomb Lvl8
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -708,4 +748,6 @@ Projectiles: {
 	SantaWaterBottleProjectile.DisplayName: Santa Water Bottle Projectile
 	SantaWaterControllerProjectile.DisplayName: Santa Water Controller Projectile
 	SantaWaterPuddleProjectile.DisplayName: Santa Water Puddle Projectile
+	CherryBombControllerProjectile.DisplayName: Cherry Bomb Controller Projectile
+	CherryBombProjectile.DisplayName: Cherry Bomb Projectile
 }

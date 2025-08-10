@@ -30,14 +30,17 @@ namespace VampariaSurvivors.Content.Items
         {
             var lootPool = new List<(int itemType, int weight)>
             {
-                (ModContent.ItemType<GarlicLvl1>(), 100),
-                (ModContent.ItemType<MagicWandLvl1>(), 80),
-                (ModContent.ItemType<RuneTracerLvl1>(), 60),
-                (ModContent.ItemType<FireWandLvl1>(), 60),
+                (ModContent.ItemType<AxeLvl1>(), 50),
                 (ModContent.ItemType<BoneLvl1>(), 80),
+                (ModContent.ItemType<CrossLvl1>(), 70),
+                (ModContent.ItemType<FireWandLvl1>(), 60),
+                (ModContent.ItemType<GarlicLvl1>(), 100),
+                (ModContent.ItemType<KingBibleLvl1>(),60),
+                (ModContent.ItemType<MagicWandLvl1>(), 80),
                 (ModContent.ItemType<KnifeLvl1>(), 80),
-                (ModContent.ItemType<WhipLvl1>(), 60),
-                (ModContent.ItemType<CrossLvl1>(), 70)
+                (ModContent.ItemType<RuneTracerLvl1>(), 70),
+                (ModContent.ItemType<SantaWaterLvl1>(), 50),
+                (ModContent.ItemType<WhipLvl1>(), 70),
                 //add other weapons
             };
 

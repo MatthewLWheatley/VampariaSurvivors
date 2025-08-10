@@ -1,4 +1,4 @@
 displayName = Vamparia Survivors
 author = MattyLee
-version = 0.71
+version = 0.80
 includeSource = true

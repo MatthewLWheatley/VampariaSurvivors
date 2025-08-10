@@ -1,7 +1,9 @@
 [h1]Vamparia Survivors Arsenal[/h1]
 Brings the addictive chaos of Vampire Survivors to Terraria! This mod adds iconic weapons from the hit indie game, letting you unleash automatic projectile mayhem on Terraria's monsters.
 
-Just Kill Bosses to start collect items through the chests dropped
+Just kill bosses to collect items through the chests dropped
+Weapons work as toggles with an initial mana cast cost, then 10 mana per second maintenance
+Items automatically level up when you have more than one in your inventory
 
 [h2]Features:[/h2]
 
@@ -18,13 +20,52 @@ Transform your Terraria experience with the satisfying weapon systems that made 
 
 [h2]Weapons Added:[/h2]
 
-[*]Magic Wand
+[*]Axe
+[*]Bone
+[*]Cross
 [*]Fire Wand
 [*]Garlic
-[*]RuneTracer
-[*]Bone
+[*]King Bible
+[*]Magic Wand
+[*]Knife
+[*]Rune Tracer
+[*]Santa Water
+[*]Whip
+
+[h2]Accessories Added:[/h2]
+
+[*]Bracer
+[*]Candelabrador
+[*]Duplicator
+[*]Empty Tome
+[*]Hollow Heart
+[*]Pummarola
+[*]Spell Binder
+[*]Spinach
+
+[h2]Changes:[/h2]
+
+[*]Many of the weapons (Axe, Cross, King Bible, Knife, Santa Water, Whip)
+[*]Accessories
+[*]Auto leveling of weapons, removing the crafting required.
+[*]Complete rewrite of weapon stucture to allow for Accessories.
+[*]Bug Fixes to Rune Tracer not working with all screen sizes
 
 [h2]To Add:[/h2]
 
 [*][i][u][b]THE REST OF THE WEAPONS[/b][/u][/i]
+Feedback on what remaining weapons are wanted would be appreciated
 [*]A Dungeon Defenders style mini game based around the Vampire Survivors game loop
+[*]Remaining accessories
+[*]Union weapons
+
+
+[h2]Accessories Crafting[/h2]
+Bracer: 3 Leather, 2 Iron Bar, 1 Shackle
+Candelabrador: 5 Candle, 10 Torch, 1 Chain
+Duplicator: 1 CrystalBall, 5 Soul of Might, 5 Soul of Sight
+Empty Tome: 1 Book, 1 Mana Crystal
+Hollow Heart: 1 LifeCrystal, 2 Ruby, 5 Soul of Night
+Pummarola: 1 Life Fruit, 5 HealingPotion
+Spell Binder: 1 Magic Mirror, 3 Fallen Star, 5 Silk
+Spinach: 3 Daybloom, 1 Life Crystal
