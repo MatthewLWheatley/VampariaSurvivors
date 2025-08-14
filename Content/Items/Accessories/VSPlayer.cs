@@ -24,6 +24,7 @@ namespace VampariaSurvivors.Content.Accessories
 
         private int recoveryTimer = 0;
         private const int RecoveryInterval = 60;
+        
 
         public override void ResetEffects()
         {
@@ -100,6 +101,7 @@ namespace VampariaSurvivors.Content.Accessories
 
             return modifiedStats;
         }
+
     }
 
     public abstract class VSAccessory : ModItem

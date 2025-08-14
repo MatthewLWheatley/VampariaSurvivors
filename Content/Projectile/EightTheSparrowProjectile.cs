@@ -1,28 +1,20 @@
-﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework;
 using System;
-using System.Collections.Generic;
 using Terraria;
-using Terraria.Audio;
 using Terraria.DataStructures;
-using Terraria.ID;
 using Terraria.ModLoader;
 using VampariaSurvivors.Content.Items;
 
 namespace VampariaSurvivors.Content.Projectile
 {
-    public class AxeControllerProjectile : ModProjectile
+    public class EightTheSparrowControllerProjectile : ModProjectile
     {
         private int manaTimer = 0;
         private int shootTimer = 0;
         private float ManaCost = 10f;
-        private int burstCooldown = 0;
-        private int burstShotCount = 0;
 
         private WeaponStats weaponStats;
         private WeaponStats originalWeaponStats;
-
-
 
         public override void OnSpawn(IEntitySource source)
         {
@@ -39,11 +31,11 @@ namespace VampariaSurvivors.Content.Projectile
                 {
                     weaponStats = new WeaponStats
                     {
-                        Damage = 20,
-                        Amount = 2,
-                        Pierce = 3,
-                        Cooldown = 60,
-                        ProjectileInterval = 6
+                        Damage = 10,
+                        Amount = 1,
+                        Pierce = 1,
+                        Cooldown = 45,
+                        Speed = 1.0f
                     };
                     originalWeaponStats = weaponStats;
                 }
@@ -65,10 +57,10 @@ namespace VampariaSurvivors.Content.Projectile
 
         private bool IsWeaponEquipped(Player player)
         {
-            // Check if any Axe weapon is in the player's inventory
+            // Check if any EightTheSparrow weapon is in the player's inventory
             for (int i = 0; i < player.inventory.Length; i++)
             {
-                if (player.inventory[i].ModItem is VSWeapon weapon && weapon.WeaponIdentifier == "Axe")
+                if (player.inventory[i].ModItem is VSWeapon weapon && weapon.WeaponIdentifier == "EightTheSparrow")
                 {
                     return true;
                 }
@@ -81,7 +73,7 @@ namespace VampariaSurvivors.Content.Projectile
             // Find the current weapon and check if its current stats differ from when projectile was created
             for (int i = 0; i < player.inventory.Length; i++)
             {
-                if (player.inventory[i].ModItem is VSWeapon weapon && weapon.WeaponIdentifier == "Axe")
+                if (player.inventory[i].ModItem is VSWeapon weapon && weapon.WeaponIdentifier == "EightTheSparrow")
                 {
                     WeaponStats currentStats = weapon.GetWeaponStats(player);
                     
@@ -90,7 +82,7 @@ namespace VampariaSurvivors.Content.Projectile
                            currentStats.Amount != weaponStats.Amount ||
                            currentStats.Pierce != weaponStats.Pierce ||
                            currentStats.Cooldown != weaponStats.Cooldown ||
-                           currentStats.ProjectileInterval != weaponStats.ProjectileInterval;
+                           Math.Abs(currentStats.Speed - weaponStats.Speed) > 0.001f;
                 }
             }
             return false; // Weapon not found, let the IsWeaponEquipped check handle it
@@ -101,7 +93,7 @@ namespace VampariaSurvivors.Content.Projectile
             Player player = Main.player[Projectile.owner];
             Projectile.Center = player.Center;
 
-            // Check if the Axe weapon is still equipped/in inventory
+            // Check if the EightTheSparrow weapon is still equipped/in inventory
             if (!IsWeaponEquipped(player))
             {
                 Projectile.Kill();
@@ -133,65 +125,54 @@ namespace VampariaSurvivors.Content.Projectile
             shootTimer++;
             if (shootTimer >= weaponStats.Cooldown)
             {
-                burstCooldown = 0;
-                burstShotCount = 0;
+                ShootBullets(player);
                 shootTimer = 0;
-            }
-
-            burstCooldown++;
-            if (burstCooldown >= weaponStats.ProjectileInterval && burstShotCount < weaponStats.Amount)
-            {
-                ShootAxe(player, burstShotCount);
-                burstCooldown = 0;
-                burstShotCount++;
             }
         }
 
-        private void ShootAxe(Player player, int axeIndex)
+        private void ShootBullets(Player player)
         {
-            Vector2 shootPosition = player.Center;
-            Vector2 velocity;
-
-            if (axeIndex == 0)
+            // Four diagonal directions toward screen corners
+            Vector2[] directions = new Vector2[]
             {
-                velocity = new Vector2(0, -8f);
-            }
-            else
+                Vector2.Normalize(new Vector2(-1, -1)), // Top-left corner
+                Vector2.Normalize(new Vector2(1, -1)),  // Top-right corner
+                Vector2.Normalize(new Vector2(-1, 1)),  // Bottom-left corner
+                Vector2.Normalize(new Vector2(1, 1))    // Bottom-right corner
+            };
+
+            float shootSpeed = 8f * weaponStats.Speed;
+
+            // Fire Amount bullets in each direction
+            for (int dir = 0; dir < directions.Length; dir++)
             {
-                float facingDirection = player.direction;
-                float arcAngle = axeIndex * 0.5f;
+                for (int bullet = 0; bullet < weaponStats.Amount; bullet++)
+                {
+                    Vector2 velocity = directions[dir] * shootSpeed;
+                    
+                    // Slight spacing for multiple bullets in same direction
+                    Vector2 spawnOffset = directions[dir] * (bullet * 20f);
 
-                velocity = new Vector2(
-                    facingDirection * arcAngle * 3f,
-                    -8f + (arcAngle * 0.5f)
-                );
+                    int projectileType = ModContent.ProjectileType<EightTheSparrowBulletProjectile>();
+
+                    Terraria.Projectile.NewProjectile(
+                        Projectile.GetSource_FromThis(),
+                        player.Center + spawnOffset,
+                        velocity,
+                        projectileType,
+                        weaponStats.Damage,
+                        weaponStats.Knockback,
+                        player.whoAmI,
+                        ai0: weaponStats.Pierce
+                    );
+                }
             }
-
-            // Apply speed modifier from weapon stats
-            velocity *= weaponStats.Speed;
-
-            int projectileType = ModContent.ProjectileType<AxeProjectile>();
-
-            Terraria.Projectile.NewProjectile(
-                Projectile.GetSource_FromThis(),
-                shootPosition,
-                velocity,
-                projectileType,
-                weaponStats.Damage,
-                weaponStats.Knockback,
-                player.whoAmI,
-                ai0: weaponStats.Pierce,
-                ai1: weaponStats.Area
-            );
         }
     }
 
-    public class AxeProjectile : ModProjectile
+    public class EightTheSparrowBulletProjectile : ModProjectile
     {
         private int penetrationsLeft;
-        private float areaScale = 1.0f;
-        private int baseWidth = 16;
-        private int baseHeight = 16;
 
         public override void SetDefaults()
         {
@@ -199,29 +180,37 @@ namespace VampariaSurvivors.Content.Projectile
             Projectile.height = 16;
             Projectile.friendly = true;
             Projectile.DamageType = DamageClass.Magic;
-            Projectile.timeLeft = 150;
+            Projectile.timeLeft = 300;
             Projectile.ignoreWater = true;
-            Projectile.tileCollide = false;
-            Projectile.light = 0.3f;
+            Projectile.tileCollide = true;
+            Projectile.light = 0.4f;
             Projectile.penetrate = 100;
         }
 
         public override void OnSpawn(IEntitySource source)
         {
             penetrationsLeft = (int)Projectile.ai[0];
-            if (penetrationsLeft <= 0) penetrationsLeft = 3;
-            areaScale = Projectile.ai[1];
-            if (areaScale <= 0) areaScale = 1.0f;
-
-            Projectile.width = (int)(baseWidth * areaScale);
-            Projectile.height = (int)(baseHeight * areaScale);
+            if (penetrationsLeft <= 0) penetrationsLeft = 1;
         }
 
         public override void AI()
         {
-            Projectile.velocity.Y += 0.2f;
+            Projectile.rotation = Projectile.velocity.ToRotation() + MathHelper.PiOver2;
 
-            Projectile.rotation += 0.3f;
+            // Create blue energy trail
+            if (Main.rand.NextBool(3))
+            {
+                Dust trail = Dust.NewDustDirect(
+                    Projectile.position,
+                    Projectile.width, Projectile.height,
+                    Terraria.ID.DustID.BlueTorch,
+                    0, 0, 100,
+                    Color.Blue,
+                    1.2f
+                );
+                trail.noGravity = true;
+                trail.velocity *= 0.5f;
+            }
 
             if (Projectile.timeLeft < 30)
             {
@@ -231,7 +220,6 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override void OnHitNPC(NPC target, NPC.HitInfo hit, int damageDone)
         {
-            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
             penetrationsLeft--;
             if (penetrationsLeft <= 0)
             {
@@ -241,23 +229,7 @@ namespace VampariaSurvivors.Content.Projectile
 
         public override bool OnTileCollide(Vector2 oldVelocity)
         {
-            SoundEngine.PlaySound(SoundID.Item14, Projectile.position);
-            return true;
-        }
-
-        public override bool PreDraw(ref Color lightColor)
-        {
-
-            Texture2D mainTexture = ModContent.Request<Texture2D>(Texture).Value;
-            Vector2 mainDrawPosition = Projectile.Center - Main.screenPosition;
-            Vector2 mainOrigin = new Vector2(mainTexture.Width / 2f, mainTexture.Height / 2f);
-
-            Main.EntitySpriteDraw(mainTexture, mainDrawPosition, null,
-                                Color.White * (1f - Projectile.alpha / 255f),
-                                Projectile.rotation, mainOrigin, areaScale,
-                                SpriteEffects.None, 0);
-
-            return false;
+            return true; // Bullets cannot pass through walls
         }
     }
 }

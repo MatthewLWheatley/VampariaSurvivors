@@ -720,6 +720,86 @@ Items: {
 		DisplayName: Cherry Bomb Lvl8
 		Tooltip: ""
 	}
+
+	LightningRingLvl1: {
+		DisplayName: Lightning Ring Lvl1
+		Tooltip: ""
+	}
+
+	LightningRingLvl2: {
+		DisplayName: Lightning Ring Lvl2
+		Tooltip: ""
+	}
+
+	LightningRingLvl3: {
+		DisplayName: Lightning Ring Lvl3
+		Tooltip: ""
+	}
+
+	LightningRingLvl4: {
+		DisplayName: Lightning Ring Lvl4
+		Tooltip: ""
+	}
+
+	LightningRingLvl5: {
+		DisplayName: Lightning Ring Lvl5
+		Tooltip: ""
+	}
+
+	LightningRingLvl6: {
+		DisplayName: Lightning Ring Lvl6
+		Tooltip: ""
+	}
+
+	LightningRingLvl7: {
+		DisplayName: Lightning Ring Lvl7
+		Tooltip: ""
+	}
+
+	LightningRingLvl8: {
+		DisplayName: Lightning Ring Lvl8
+		Tooltip: ""
+	}
+
+	PentagramLvl1: {
+		DisplayName: Pentagram Lvl1
+		Tooltip: ""
+	}
+
+	PentagramLvl2: {
+		DisplayName: Pentagram Lvl2
+		Tooltip: ""
+	}
+
+	PentagramLvl3: {
+		DisplayName: Pentagram Lvl3
+		Tooltip: ""
+	}
+
+	PentagramLvl4: {
+		DisplayName: Pentagram Lvl4
+		Tooltip: ""
+	}
+
+	PentagramLvl5: {
+		DisplayName: Pentagram Lvl5
+		Tooltip: ""
+	}
+
+	PentagramLvl6: {
+		DisplayName: Pentagram Lvl6
+		Tooltip: ""
+	}
+
+	PentagramLvl7: {
+		DisplayName: Pentagram Lvl7
+		Tooltip: ""
+	}
+
+	PentagramLvl8: {
+		DisplayName: Pentagram Lvl8
+		Tooltip: ""
+	}
 }
 
 Projectiles: {
@@ -750,4 +830,9 @@ Projectiles: {
 	SantaWaterPuddleProjectile.DisplayName: Santa Water Puddle Projectile
 	CherryBombControllerProjectile.DisplayName: Cherry Bomb Controller Projectile
 	CherryBombProjectile.DisplayName: Cherry Bomb Projectile
+	LightningBoltProjectile.DisplayName: Lightning Bolt Projectile
+	LightningRingControllerProjectile.DisplayName: Lightning Ring Controller Projectile
+	LightningStrikeHitboxProjectile.DisplayName: Lightning Strike Hitbox Projectile
+	PentagramControllerProjectile.DisplayName: Pentagram Controller Projectile
+	PentagramDamageProjectile.DisplayName: Pentagram Damage Projectile
 }
